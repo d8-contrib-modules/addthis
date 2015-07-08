@@ -28,9 +28,13 @@ class AddThisBlock extends BlockBase
   public function build()
   {
     //@TODO Implement block markup
+
+    $widget_type = AddThis::getInstance()->getBlockDisplayType();
+    $widget_settings = AddThis::getInstance()->getBlockDisplaySettings();
+
     $markup = 'Testing Markup';
     return array(
-      '#markup' => $markup,
+      '#markup' => array(),
     );
   }
 

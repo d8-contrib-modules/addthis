@@ -1,0 +1,12 @@
+addthis.admin:
+  version: VERSION
+  css:
+    theme:
+      css/addthis.admin.css: {}
+      http://cache.addthiscdn.com/icons/v1/sprites/services.css: { type: external }
+addthis.global:
+  version: VERSION
+  js:
+    js/addthis.js: { scope: footer }
+
+

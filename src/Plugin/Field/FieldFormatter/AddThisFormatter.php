@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 *   id = "addthis_disabled",
 *   label = @Translation("AddThis Disabled"),
 *   field_types = {
-*     "disabled"
+*     "addthis_disabled"
 *   }
 * )
 */
@@ -27,6 +27,14 @@ class AddThisFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     //@TODO Implement viewElements()
+    $element = array();
+    $display_type = 'addthis_disabled';
+
+
+
+    $markup = array(
+      '#display' => array(),
+    );
   }
 
 }

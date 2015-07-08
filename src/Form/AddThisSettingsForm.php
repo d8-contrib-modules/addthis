@@ -37,6 +37,9 @@ class AddThisSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('addthis.settings');
 
+    //Add our library to the settings form to add in custom CSS.
+    $form['#attached']['library'][] = 'addthis/addthis.admin';
+
     // Visual settings.
     $form['fieldset_compact_menu'] = array(
       '#type' => 'fieldset',

@@ -223,10 +223,6 @@ class AddThis {
   }
 
 
-  public function addStylesheets() {
-    drupal_add_css($this->getServicesCssUrl(), 'external');
-    drupal_add_css($this->getAdminCssFilePath(), 'file');
-  }
 
   public function getFullBookmarkUrl() {
     return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
@@ -245,5 +241,15 @@ class AddThis {
     return $this->getProfileIdQueryParameter('#');
   }
 
+
+  /*
+   * Get markup for a given display type.
+   *
+   * When $options does not contain #entity, link to the current URL.
+   * When $options does not contain #display, use default settings.
+   */
+  public function getDisplayMarkup($display, $options = array()) {
+    return array();
+  }
 
 }

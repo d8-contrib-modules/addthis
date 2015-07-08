@@ -1,2 +1,8 @@
 <?php
 
+function addthis_page_attachments(array &$page){
+  $page['#attached']['library'][] = 'addthis/addthis.global';
+
+
+
+}
