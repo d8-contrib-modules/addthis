@@ -1,0 +1,25 @@
+compact_menu:
+  menu_style:
+    addthis_co_brand: ''
+    addthis_ui_header_color: ''
+    addthis_ui_header_background_color: ''
+    addthis_click_to_open_compact_menu_enabled: 0
+    addthis_open_windows_enabled: 0
+    addthis_ui_delay: '0'
+  enabled_services:
+    addthis_enabled_services: { }
+  additionals:
+    addthis_standard_css_enabled: true
+    addthis_508_compliant: false
+    addthis_addressbook_enabled: false
+excluded_services:
+  addthis_excluded_services: { }
+analytics:
+  addthis_profile_id: ''
+  addthis_clickback_tracking_enabled: false
+  addthis_facebook_like_count_support_enabled: true
+  addthis_google_analytics_tracking_enabled: false
+  addthis_google_analytics_social_tracking_enabled: false
+third_party:
+  addthis_twitter_via: AddThis
+  addthis_twitter_template: '{{title}} {{url}} via @AddThis'
