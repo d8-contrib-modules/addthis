@@ -1,0 +1,5 @@
+addthis.settings:
+  title: AddThis
+  description: 'Manage your site''s AddThis settings.'
+  parent: system.admin_config_ui
+  route_name: addthis.settings

@@ -1,0 +1,95 @@
+# Schema for the configuration files of the addthis module.
+
+addthis.settings:
+  type: mapping
+  label: 'AddThis Settings'
+  mapping:
+    compact_menu:
+      type: mapping
+      label: 'Compact menu'
+      mapping:
+        menu_style:
+          type: mapping
+          label: 'Style'
+          mapping:
+          addthis_co_brand:
+            type: string
+            label: 'Branding text'
+          addthis_ui_header_color:
+            type: string
+            label: 'Header text color'
+          addthis_ui_header_background_color:
+            type: string
+            label: 'Header background color'
+          addthis_click_to_open_compact_menu_enabled:
+            type: boolean
+            label: 'Open compact menu on click'
+          addthis_open_windows_enabled:
+            type: boolean
+            label: 'Use pop-up windows'
+          addthis_ui_delay:
+            type: string
+            label: 'Menu open delay'
+        enabled_services:
+          type: mapping
+          label: 'Compact menu enabled services'
+          mapping:
+            addthis_enabled_services:
+              type: sequence
+              label: 'Enabled services'
+              sequence:
+                type: string
+                label: 'Services Enabled'
+        additionals:
+          type: mapping
+          label: 'Additional configuration'
+          mapping:
+            addthis_standard_css_enabled:
+              type: boolean
+              label: 'Use standard AddThis stylesheet'
+            addthis_508_compliant:
+              type: boolean
+              label: '508 compliant'
+            addthis_addressbook_enabled:
+              type: boolean
+              label: 'Use addressbook'
+    excluded_services:
+      type: mapping
+      label: 'Excluded Services'
+      mapping:
+        addthis_excluded_services:
+          type: sequence
+          label: 'Excluded services'
+          sequence:
+            type: string
+            label: 'Services Excluded'
+    analytics:
+      type: mapping
+      label: 'Analytics & Tracking'
+      mapping:
+        addthis_profile_id:
+            type: string
+            label: 'AddThis ProfileID'
+        addthis_clickback_tracking_enabled:
+            type: boolean
+            label: 'Track clickback'
+        addthis_facebook_like_count_support_enabled:
+            type: boolean
+            label: 'Enable Facebook Like tracking'
+        addthis_google_analytics_tracking_enabled:
+          type: boolean
+          label: 'Track with Google Analytics'
+        addthis_google_analytics_social_tracking_enabled:
+            type: boolean
+            label: 'Track with Google Analytics social'
+    third_party:
+      type: mapping
+      label: 'Third party settings'
+      mapping:
+        addthis_twitter_via:
+            type: string
+            label: 'Send via'
+        addthis_twitter_template:
+          type: string
+          label: 'Template text'
+
