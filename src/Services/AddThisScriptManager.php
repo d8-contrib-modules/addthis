@@ -15,11 +15,11 @@
 
 namespace Drupal\addthis\Services;
 
-use Drupal\addthis\Addthis;
+use Drupal\addthis\Util\AddThisWidgetJsUrl;
+
 
 class AddThisScriptManager {
 
-  private $addthis = NULL;
   private $async = NULL;
   private $domready = NULL;
 
@@ -27,8 +27,6 @@ class AddThisScriptManager {
    * Construct method.
    */
   private function __construct() {
-    $this->addthis = AddThis::getInstance();
-
     $this->async = \Drupal::config('addthis.settings.advanced')->get('addthis_widget_load_async');
     $this->domready = \Drupal::config('addthis.settings.advanced')->get('addthis_widget_load_domready');
   }
@@ -102,7 +100,7 @@ class AddThisScriptManager {
   public function attachJsToElement(&$element) {
     $config = \Drupal::config('addthis.settings');
     $adv_config = \Drupal::config('addthis.settings.advanced');
-    if ($adv_config->get('addthis_widget_js_include') != AddThis::WIDGET_JS_INCLUDE_NONE) {
+    if ($adv_config->get('addthis_widget_js_include') !== 0) {
       $widget_js = new AddThisWidgetJsUrl($adv_config->get('addthis_widget_js_url'));
 
       $pubid = $config->get('analytics.addthis_profile_id');
@@ -123,27 +121,18 @@ class AddThisScriptManager {
       // Only when the script is not loaded after the DOM is ready we include
       // the script with #attached.
       if (!$domready) {
-        $element['#attached']['js'][$this->getWidgetJsUrl()] = array(
-            'type' => 'external',
-            'scope' => 'footer',
-        );
+        $element['#attached']['library'][] = 'addthis/addthis.widget';
       }
 
       // Every setting value passed here overrides previously set values but
       // leaves the values that are already set somewhere else and that are not
       // passed here.
-      $element['#attached']['js'][] = array(
-          'type' => 'setting',
-          'data' => array(
-              'addthis' => array(
-                  'async' => $async,
-                  'domready' => $domready,
-                  'widget_url' => $this->getWidgetJsUrl(),
-
-                  'addthis_config' => $this->getJsAddThisConfig(),
-                  'addthis_share' => $this->getJsAddThisShare(),
-              )
-          )
+      $element['#attached']['drupalSettings']['addthis'] = array(
+        'async' => $async,
+        'domready' => $domready,
+        'widget_url' => $this->getWidgetJsUrl(),
+        'addthis_config' => $this->getJsAddThisConfig(),
+        'addthis_share' => $this->getJsAddThisShare(),
       );
     }
   }
@@ -180,34 +169,35 @@ class AddThisScriptManager {
    */
   private function getJsAddThisConfig() {
     global $language;
+    $config = \Drupal::config('addthis.settings');
 
-    $enabled_services = $this->addthis->getServiceNamesAsCommaSeparatedString($this->addthis->getEnabledServices()) . 'more';
-    $excluded_services = $this->addthis->getServiceNamesAsCommaSeparatedString($this->addthis->getExcludedServices());
+    $enabled_services = $this->getServiceNamesAsCommaSeparatedString($config->get('compact_menu.enabled_services.addthis_enabled_services')) . 'more';
+    $excluded_services = $this->getServiceNamesAsCommaSeparatedString($config->get('excluded_services.addthis_excluded_services'));
 
     $configuration = array(
-      'pubid' => $this->addthis->getProfileId(),
+      'pubid' => $config->get('analytics.addthis_profile_id'),
       'services_compact' => $enabled_services,
       'services_exclude' => $excluded_services,
-      'data_track_clickback' => $this->addthis->isClickbackTrackingEnabled(),
-      'ui_508_compliant' => $this->addthis->get508Compliant(),
-      'ui_click' => $this->addthis->isClickToOpenCompactMenuEnabled(),
-      'ui_cobrand' => $this->addthis->getCoBrand(),
-      'ui_delay' => $this->addthis->getUiDelay(),
-      'ui_header_background' => $this->addthis->getUiHeaderBackgroundColor(),
-      'ui_header_color' => $this->addthis->getUiHeaderColor(),
-      'ui_open_windows' => $this->addthis->isOpenWindowsEnabled(),
-      'ui_use_css' => $this->addthis->isStandardCssEnabled(),
-      'ui_use_addressbook' => $this->addthis->isAddressbookEnabled(),
+      'data_track_clickback' => $config->get('analytics.addthis_clickback_tracking_enabled'),
+      'ui_508_compliant' => $config->get('compact_menu.additionals.addthis_508_compliant'),
+      'ui_click' => $config->get('compact_menu.menu_style.addthis_click_to_open_compact_menu_enabled'),
+      'ui_cobrand' => $config->get('compact_menu.menu_style.addthis_co_brand'),
+      'ui_delay' => $config->get('compact_menu.menu_style.addthis_ui_delay'),
+      'ui_header_background' => $config->get('compact_menu.menu_style.addthis_ui_header_background_color'),
+      'ui_header_color' => $config->get('compact_menu.menu_style.addthis_ui_header_color'),
+      'ui_open_windows' => $config->get('compact_menu.menu_style.addthis_open_windows_enabled'),
+      'ui_use_css' => $config->get('compact_menu.additionals.addthis_standard_css_enabled'),
+      'ui_use_addressbook' => $config->get('compact_menu.additionals.addthis_addressbook_enabled'),
       'ui_language' => $language->language,
     );
-    if (module_exists('googleanalytics')) {
-      if ($this->addthis->isGoogleAnalyticsTrackingEnabled()) {
-        $configuration['data_ga_property'] = variable_get('googleanalytics_account', '');
-        $configuration['data_ga_social'] = $this->addthis->isGoogleAnalyticsSocialTrackingEnabled();
+    if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
+      if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
+        $configuration['data_ga_property'] = \Drupal::config(google_analytics.settings)->get('google_analytics_account');
+        $configuration['data_ga_social'] = $config->get('analytics.addthis_google_analytics_social_tracking_enabled');
       }
     }
 
-    drupal_alter('addthis_configuration', $configuration);
+   // drupal_alter('addthis_configuration', $configuration);
     return $configuration;
   }
 
@@ -230,10 +220,27 @@ class AddThisScriptManager {
         'templates' => $configuration['templates'],
       );
     }
-    $addthis_share['templates']['twitter'] = $this->addthis->getTwitterTemplate();
+    $addthis_share['templates']['twitter'] = \Drupal::config('addthis.settings')->get('third_party.addthis_twitter_template');
 
-    drupal_alter('addthis_configuration_share', $configuration);
+    //drupal_alter('addthis_configuration_share', $configuration);
     return $addthis_share;
+  }
+
+  /**
+   * Returns a comma separated list of service values.
+   *
+   * @param $services
+   * @return string
+   */
+  public function getServiceNamesAsCommaSeparatedString($services) {
+    $serviceNames = array_values($services);
+    $servicesAsCommaSeparatedString = '';
+    foreach ($serviceNames as $serviceName) {
+      if ($serviceName != '0') {
+        $servicesAsCommaSeparatedString .= $serviceName . ',';
+      }
+    }
+    return $servicesAsCommaSeparatedString;
   }
 
 }

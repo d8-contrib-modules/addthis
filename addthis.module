@@ -4,5 +4,15 @@ function addthis_page_attachments(array &$page){
   $page['#attached']['library'][] = 'addthis/addthis.global';
 
 
+// Include the widget js when we include on all but admin pages.
+  //if (!path_is_admin(current_path()) && AddThis::getInstance()->getWidgetJsInclude() == AddThis::WIDGET_JS_INCLUDE_PAGE) {
+  $manager = \Drupal\addthis\Services\AddThisScriptManager::getInstance();
+  $manager->attachJsToElement($page);
+  //}
+
+}
+
+
+function addthis_library_info_alter(){
 
 }

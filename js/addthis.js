@@ -3,11 +3,10 @@
  * AddThis javascript actions.
  */
 
-(function ($) {
+(function ($, Drupal, drupalSettings) {
   Drupal.behaviors.addthis = {
     scriptLoaded: false,
-
-    attach: function(context, settings) {
+    attach: function(context) {
 
       // The addthis configuration is not loaded but the settings are passed
       // to do so.
@@ -35,7 +34,7 @@
 
     // Returns if the settings defined by the addthis module are loaded.
     isSettingsLoaded: function () {
-      if (typeof Drupal.settings.addthis == 'undefined') {
+      if (typeof drupalSettings.addthis == 'undefined') {
         return false;
       }
       return true;
@@ -50,8 +49,8 @@
     },
 
     initConfig: function () {
-      addthis_config = Drupal.settings.addthis.addthis_config;
-      addthis_share = Drupal.settings.addthis.addthis_share;
+      addthis_config = drupalSettings.addthis.addthis_config;
+      addthis_share = drupalSettings.addthis.addthis_share;
     },
 
     // Load the js library when the dom is ready.
@@ -60,8 +59,8 @@
       // load the script here.
       if (!this.scriptLoaded &&
           this.isConfigLoaded() &&
-          Drupal.settings.addthis.domready) {
-        $.getScript(Drupal.settings.addthis.widget_url, Drupal.behaviors.addthis.scriptReady);
+          drupalSettings.addthis.domready) {
+        $.getScript(drupalSettings.addthis.widget_url, Drupal.behaviors.addthis.scriptReady);
       }
     },
 
@@ -83,8 +82,8 @@
 
   // This load the config in time to run any addthis functionality.
   if (Drupal.behaviors.addthis.isConfigLoaded()) {
-    addthis_config = Drupal.settings.addthis.addthis_config;
-    addthis_share = Drupal.settings.addthis.addthis_share;
+    addthis_config = drupalSettings.addthis.addthis_config;
+    addthis_share = drupalSettings.addthis.addthis_share;
   }
 
   // Document ready in case we want to load AddThis into the dom after every
@@ -95,4 +94,4 @@
     Drupal.behaviors.addthis.loadDomready();
   });
 
-}(jQuery));
+}(jQuery, Drupal, drupalSettings));
