@@ -242,6 +242,14 @@ class AddThis {
   }
 
 
+  public function getDisplayTypes() {
+    $displays = array();
+    foreach ($display_impl = _addthis_field_info_formatter_field_type() as $key => $display) {
+      $displays[$key] = t(SafeMarkup::checkPlain($display['label']));
+    }
+    return $displays;
+  }
+
   /*
    * Get markup for a given display type.
    *
@@ -249,7 +257,31 @@ class AddThis {
    * When $options does not contain #display, use default settings.
    */
   public function getDisplayMarkup($display, $options = array()) {
-    return array();
+    $formatters = \Drupal::Service('plugin.manager.field.formatter')->getDefinitions();
+
+    if (!array_key_exists($display, $formatters)) {
+      return array();
+    }
+    // The display type exists. Now get it and get the markup.
+    $display_information = $formatters[$display];
+
+    // Theme function might only give a display name and
+    // render on default implementation.
+    if (!isset($options['#display']) ||
+      (isset($options['#display']['type']) && $options['#display']['type'] != $display)) {
+
+      $options['#display'] = isset($options['#display']) ? $options['#display'] : array();
+      $options['#display'] = array_merge($options['#display'], $display_information);
+      $options['#display']['type'] = $display;
+
+    }
+    
+
+    $markup = array(
+      '#display' => $options['#display'],
+    );
+
+    return $markup;
   }
 
 }

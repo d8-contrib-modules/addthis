@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 *   id = "addthis_disabled",
 *   label = @Translation("AddThis Disabled"),
 *   field_types = {
-*     "addthis_disabled"
+*     "addthis"
 *   }
 * )
 */
