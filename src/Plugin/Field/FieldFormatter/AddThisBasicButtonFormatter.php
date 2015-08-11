@@ -9,6 +9,8 @@ namespace Drupal\addthis\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\addthis\AddThis;
+use Drupal\addthis\Services\AddThisScriptManager;
 
 /**
  * Plugin implementation of the 'addthis_basic_button' formatter.
