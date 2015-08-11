@@ -21,7 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   }
  * )
  */
-class AddThisBasicButtonFormatter extends FormatterBase {
+class AddThisBasicButtonFormatter extends AddThisFormatter {
 
   /**
    * {@inheritdoc}
@@ -76,7 +76,7 @@ class AddThisBasicButtonFormatter extends FormatterBase {
 
     //$extra_css = isset($settings['extra_css']) ? $settings['extra_css'] : '';
     $element = array(
-      '#theme' => 'addthis_wrapper',
+      '#type' => 'addthis_wrapper',
       '#tag' => 'a',
       '#attributes' => array(
         'class' => array(
@@ -92,7 +92,7 @@ class AddThisBasicButtonFormatter extends FormatterBase {
 
     // Create img button.
     $image = array(
-      '#theme' => 'addthis_element',
+      '#type' => 'addthis_element',
       '#tag' => 'img',
       '#attributes' => array(
         'src' => $button_img,

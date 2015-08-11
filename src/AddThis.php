@@ -121,25 +121,18 @@ class AddThis {
     return $rows;
   }
 
-  /**
-   * Get the type used for the block.
-   */
-  public function getBlockDisplayType() {
-    $block_widget_type = $this->config->get(self::BLOCK_WIDGET_TYPE_KEY);
-    $block_widget_type = isset($block_widget_type) ? $block_widget_type : self::WIDGET_TYPE_DISABLED;
-    return $block_widget_type;
-  }
 
   /**
    * Get the settings used by the block display.
    */
-  public function getBlockDisplaySettings() {
+  public function getBlockDisplaySettings($widget_type) {
     $block_widget_settings = $this->config->get(self::BLOCK_WIDGET_SETTINGS_KEY);
     $block_widget_settings = isset($block_widget_settings) ? $block_widget_settings : NULL;
     $settings = $block_widget_settings;
 
-    if ($settings == NULL && $this->getBlockDisplayType() != self::WIDGET_TYPE_DISABLED) {
-      $settings =  \Drupal::service('plugin.manager.field.formatter')->getDefinition($this->getBlockDisplayType());
+    if ($settings == NULL && $widget_type != self::WIDGET_TYPE_DISABLED) {
+      $settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($widget_type);
+
     }
 
     return $settings;
