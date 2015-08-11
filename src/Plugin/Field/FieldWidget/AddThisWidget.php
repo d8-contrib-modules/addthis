@@ -18,7 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "addthis_button_widget",
  *   label = @Translation("AddThis button"),
  *   field_types = {
- *     "disabled"
+ *     "addthis"
  *   },
  *   multiple_values = FALSE
  * )

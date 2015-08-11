@@ -37,19 +37,8 @@ class AddThisBlock extends BlockBase
    */
   public function build()
   {
-    //@TODO Implement block markup
-
-    $widget_type = AddThis::getInstance()->getBlockDisplayType();
-    $widget_settings = AddThis::getInstance()->getBlockDisplaySettings();
-
-    $markup = AddThis::getInstance()->getDisplayMarkup('addthis_basic_button');
-    $formatters = \Drupal::Service('plugin.manager.field.formatter')->getDefinitions();
-    //$markup = 'Testing Markup';
-
-
-    $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
     $element = array(
-      '#theme' => 'addthis_wrapper',
+      '#type' => 'addthis_wrapper',
       '#tag' => 'a',
       '#attributes' => array(
         'class' => array(
@@ -58,28 +47,93 @@ class AddThisBlock extends BlockBase
       ),
     );
 
-    $test = drupal_render($element);
 
     // Add the widget script.
     $script_manager = AddThisScriptManager::getInstance();
     $script_manager->attachJsToElement($element);
 
-    // Create img button.
-    $image = array(
-      '#theme' => 'addthis_element',
-      '#tag' => 'img',
-      '#attributes' => array(
-        'src' => $button_img,
-        'alt' => t('Share page with AddThis'),
-      ),
-    );
 
-    $element[] = $image;
+    $widget_type = $this->configuration['type'];
+    $widget_settings = AddThis::getInstance()->getBlockDisplaySettings($widget_type);
+
+    $services = trim($widget_settings['share_services']);
+    $services = str_replace(' ', '', $services);
+    $services = explode(',', $services);
+    $items = array();
+
+    // All service elements
+    $items = array();
+    foreach ($services as $service) {
+      $items[$service] = array(
+        '#type' => 'addthis_element',
+        '#tag' => 'a',
+        '#value' => '',
+        '#attributes' => array(
+          'href' => AddThis::getInstance()->getBaseBookmarkUrl(),
+          'class' => array(
+            'addthis_button_' . $service,
+          ),
+        ),
+        '#addthis_service' => $service,
+      );
+
+      // Add individual counters.
+      if (strpos($service, 'counter_') === 0) {
+        $items[$service]['#attributes']['class'] = array("addthis_$service");
+      }
+
+      // Basic implementations of bubble counter orientation.
+      // @todo Figure all the bubbles out and add them.
+      //   Still missing: tweetme, hyves and stubleupon, google_plusone_badge.
+      //
+      $orientation = ($widget_settings['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
+      switch ($service) {
+        case 'linkedin_counter':
+          $items[$service]['#attributes'] += array(
+            'li:counter' => ($orientation ? '' : 'top'),
+          );
+          break;
+        case 'facebook_like':
+          $items[$service]['#attributes'] += array(
+            'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
+          );
+          break;
+        case 'facebook_share':
+          $items[$service]['#attributes'] += array(
+            'fb:share:layout' => ($orientation ? 'button_count' : 'box_count')
+          );
+          break;
+        case 'google_plusone':
+          $items[$service]['#attributes'] += array(
+            'g:plusone:size' => ($orientation ? 'standard' : 'tall')
+          );
+          break;
+        case 'tweet':
+          $items[$service]['#attributes'] += array(
+            'tw:count' => ($orientation ? 'horizontal' : 'vertical'),
+            'tw:via' => AddThis::getInstance()->getTwitterVia(),
+          );
+          break;
+        case 'bubble_style':
+          $items[$service]['#attributes']['class'] = array(
+            'addthis_counter', 'addthis_bubble_style'
+          );
+          break;
+        case 'pill_style':
+          $items[$service]['#attributes']['class'] = array(
+            'addthis_counter', 'addthis_pill_style'
+          );
+          break;
+      }
+    }
+
+    $element += $items;
 
     $markup = render($element);
     return array(
-      'content' => $markup,
+      '#markup' => $markup
     );
+
   }
 
   function blockForm($form, FormStateInterface $form_state) {
@@ -90,8 +144,8 @@ class AddThisBlock extends BlockBase
     );
 
     // Retrieve settings.
-    $addthis_type = AddThis::getInstance()->getBlockDisplayType();
-    $addthis_settings = AddThis::getInstance()->getBlockDisplaySettings();
+    $widget_type = $this->configuration['type'];
+    //$addthis_settings = AddThis::getInstance()->getBlockDisplaySettings();
 
 
     // The list of formatters.
@@ -108,8 +162,10 @@ class AddThisBlock extends BlockBase
     return $form;
   }
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['type'] = $form_state->getValue('type');
+    $this->configuration['type'] = $form_state->getValue(['settings', 'addthis_settings', 'type']);
   }
+
+
 
 }
 

@@ -3,7 +3,7 @@ addthis.settings:
   description: 'Manage your site''s AddThis settings.'
   parent: system.admin_config_ui
   route_name: addthis.settings
-addthis.settings:
+addthis.settings.advanced:
   title: AddThis
   description: 'Manage your site''s Advanced AddThis settings.'
   parent: addthis.settings
