@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\addthis\Plugin\Field\FieldFormatter\AddThisBasicToolboxFormatter.
+ * Contains \Drupal\addthis_fields\Plugin\Field\FieldFormatter\AddThisBasicToolboxFormatter.
  */
 
-namespace Drupal\addthis\Plugin\Field\FieldFormatter;
+namespace Drupal\addthis_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -23,7 +23,7 @@ use Drupal\addthis\Services\AddThisScriptManager;
  *   }
  * )
  */
-class AddThisBasicToolboxFormatter extends AddThisFormatter {
+class AddThisBasicToolboxFormatter extends FormatterBase {
 
   /**
    * {@inheritdoc}
@@ -121,7 +121,6 @@ class AddThisBasicToolboxFormatter extends AddThisFormatter {
     // Add the widget script.
     $script_manager = AddThisScriptManager::getInstance();
     $script_manager->attachJsToElement($element);
-
 
     $widget_settings = $this->getSettings();
 

@@ -1,16 +1,17 @@
 <?php
 /**
  * @file
- * Contains \Drupal\addthis\Plugin\Field\FieldFormatter\AddThisBasicButtonFormatter.
+ * Contains \Drupal\addthis_fields\Plugin\Field\FieldFormatter\AddThisBasicButtonFormatter.
  */
 
-namespace Drupal\addthis\Plugin\Field\FieldFormatter;
+namespace Drupal\addthis_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\addthis\AddThis;
 use Drupal\addthis\Services\AddThisScriptManager;
+
 
 /**
  * Plugin implementation of the 'addthis_basic_button' formatter.
@@ -23,7 +24,7 @@ use Drupal\addthis\Services\AddThisScriptManager;
  *   }
  * )
  */
-class AddThisBasicButtonFormatter extends AddThisFormatter {
+class AddThisBasicButtonFormatter extends FormatterBase {
 
   /**
    * {@inheritdoc}

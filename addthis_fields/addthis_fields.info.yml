@@ -1,0 +1,11 @@
+name: AddThis Fields
+description: Provides a basic field definitions for rendering AddThis.
+type: module
+package: Sharing
+core: 8.x
+
+dependencies:
+  - addthis
+
+
+

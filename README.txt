@@ -30,6 +30,14 @@ information.
 For link sharing statistics registration at http://addthis.com/ is required, but
 the module will work even without registration.
 
+-- INCLUDED MODULES --
+1. **addthis** - Provides the base API to integrate with AddThis. Also creates RenderElements,
+base Twig templates and global admin settings for AddThis. Does not provide any
+rendering functionality on its own.
+2. **addthis_block** - Provides a configurable block for displaying AddThis.
+3. **addthis_fields** - Provides two field formatters for AddThis to allow for rendering on
+entities.
+
 -- CONFIGURATION --
 
 Use the admin configuration page to configure settings and see http://drupal.org/node/1309922
@@ -42,7 +50,10 @@ and altering configuration on rendering.
 
 -- CONTACT --
 
-Current maintainers:
+Current D8 contributors
+* John Doyle (doylejd) - https://www.drupal.org/u/doylejd
+
+Current D7 maintainers:
 * Vesa Palmu (wesku) - http://drupal.org/user/75070
 * Jani Palsamäki (janip) - http://drupal.org/user/1356218
 * Matthias Glastra (matglas86) - http://drupal.org/user/573464
