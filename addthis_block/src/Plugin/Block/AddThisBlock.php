@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\addthis\Plugin\Block\AddThisBlock.
+ * Contains \Drupal\addthis_block\Plugin\Block\AddThisBlock.
  */
 
-namespace Drupal\addthis\Plugin\Block;
+namespace Drupal\addthis_block\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -28,7 +28,10 @@ class AddThisBlock extends BlockBase
    */
   public function defaultConfiguration() {
     return array(
-      'type' => 'addthis_disabled',
+      'share_services' => 'facebook,twitter',
+      'buttons_size' => 'addthis_16x16_style',
+      'counter_orientation' => 'horizontal',
+      'extra_css' => '',
     );
   }
 
@@ -46,17 +49,14 @@ class AddThisBlock extends BlockBase
         ),
       ),
     );
-
-
     // Add the widget script.
     $script_manager = AddThisScriptManager::getInstance();
     $script_manager->attachJsToElement($element);
 
 
-    $widget_type = $this->configuration['type'];
-    $widget_settings = AddThis::getInstance()->getBlockDisplaySettings($widget_type);
+    $config = $this->configuration;
 
-    $services = trim($widget_settings['share_services']);
+    $services = trim($config['share_services']);
     $services = str_replace(' ', '', $services);
     $services = explode(',', $services);
     $items = array();
@@ -86,7 +86,7 @@ class AddThisBlock extends BlockBase
       // @todo Figure all the bubbles out and add them.
       //   Still missing: tweetme, hyves and stubleupon, google_plusone_badge.
       //
-      $orientation = ($widget_settings['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
+      $orientation = ($config['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
       switch ($service) {
         case 'linkedin_counter':
           $items[$service]['#attributes'] += array(
@@ -143,26 +143,54 @@ class AddThisBlock extends BlockBase
       '#title' => 'Display settings',
     );
 
-    // Retrieve settings.
-    $widget_type = $this->configuration['type'];
-    //$addthis_settings = AddThis::getInstance()->getBlockDisplaySettings();
 
-
-    // The list of formatters.
-    $formatter_options = AddThis::getInstance()->getDisplayTypes();
-
-    $form['settings']['addthis_settings']['type'] = array(
+    $form['settings']['addthis_settings']['share_services'] = array(
+      '#title' => t('Services'),
+      '#type' => 'textfield',
+      '#size' => 80,
+      '#default_value' => $this->configuration['share_services'],
+      '#required' => TRUE,
+      '#element_validate' => array($this, 'addThisDisplayElementServicesValidate'),
+      '#description' =>
+        t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
+        t('Elements that are available but not ont the services list are (!services).',
+          array('!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge, counter_* (several supported services), linkedin_counter')
+        ),
+    );
+    $form['settings']['addthis_settings']['buttons_size'] = array(
+      '#title' => t('Buttons size'),
       '#type' => 'select',
-      '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
-      '#title_display' => 'invisible',
-      '#options' => $formatter_options,
-      '#default_value' => $this->configuration['type'],
-      '#attributes' => array('class' => array('addthis-display-type')),
+      '#default_value' => $this->configuration['buttons_size'],
+      '#options' => array(
+        'addthis_16x16_style' => t('Small (16x16)'),
+        'addthis_32x32_style' => t('Big (32x32)'),
+      ),
+    );
+    $form['settings']['addthis_settings']['counter_orientation'] = array(
+      '#title' => t('Counter orientation'),
+      '#description' => t('Specify the way service counters are oriented.'),
+      '#type' => 'select',
+      '#default_value' => $this->configuration['counter_orientation'],
+      '#options' => array(
+        'horizontal' => t('Horizontal'),
+        'vertical' => t('Vertical'),
+      )
+    );
+    $form['settings']['addthis_settings']['extra_css'] = array(
+      '#title' => t('Extra CSS declaration'),
+      '#type' => 'textfield',
+      '#size' => 40,
+      '#default_value' => $this->configuration['extra_css'],
+      '#description' => t('Specify extra CSS classes to apply to the toolbox'),
     );
     return $form;
   }
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['type'] = $form_state->getValue(['settings', 'addthis_settings', 'type']);
+    $this->configuration['share_services'] = $form_state->getValue(['settings', 'addthis_settings', 'share_services']);
+    $this->configuration['buttons_size'] = $form_state->getValue(['settings', 'addthis_settings', 'buttons_size']);
+    $this->configuration['counter_orientation'] = $form_state->getValue(['settings', 'addthis_settings', 'counter_orientation']);
+    $this->configuration['extra_css'] = $form_state->getValue(['settings', 'addthis_settings', 'extra_css']);
+
   }
 
 

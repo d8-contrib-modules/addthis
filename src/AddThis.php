@@ -243,38 +243,6 @@ class AddThis {
     return $displays;
   }
 
-  /*
-   * Get markup for a given display type.
-   *
-   * When $options does not contain #entity, link to the current URL.
-   * When $options does not contain #display, use default settings.
-   */
-  public function getDisplayMarkup($display, $options = array()) {
-    $formatters = \Drupal::Service('plugin.manager.field.formatter')->getDefinitions();
 
-    if (!array_key_exists($display, $formatters)) {
-      return array();
-    }
-    // The display type exists. Now get it and get the markup.
-    $display_information = $formatters[$display];
-
-    // Theme function might only give a display name and
-    // render on default implementation.
-    if (!isset($options['#display']) ||
-      (isset($options['#display']['type']) && $options['#display']['type'] != $display)) {
-
-      $options['#display'] = isset($options['#display']) ? $options['#display'] : array();
-      $options['#display'] = array_merge($options['#display'], $display_information);
-      $options['#display']['type'] = $display;
-
-    }
-    
-
-    $markup = array(
-      '#display' => $options['#display'],
-    );
-
-    return $markup;
-  }
 
 }

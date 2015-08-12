@@ -6,7 +6,7 @@
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.addthis = {
     scriptLoaded: false,
-    attach: function(context) {
+    attach: function(context, settings) {
 
       // The addthis configuration is not loaded but the settings are passed
       // to do so.

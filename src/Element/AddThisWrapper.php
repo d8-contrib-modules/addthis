@@ -30,19 +30,13 @@ class AddThisWrapper extends RenderElement {
   }
 
   /**
+   * Implements preRenderAddThisWrapper()
+   *   - Defines consistent markup for the addthis_wrapper render element.
    * @param $element
    * @return mixed
    */
   public static function preRenderAddThisWrapper($element){
     $output = '<' . $element['#tag'] . new Attribute($element['#attributes']) . '>';
-    $children = Element::children($element);
-
-//    if (count($children) > 0) {
-//      foreach ($children as $child) {
-//        $output .= render($element[$child]);
-//      }
-//    }
-
     $output .= '</' . $element['#tag'] . ">\n";
     $element['addthis_wrapper'] = [
       '#markup' => $output

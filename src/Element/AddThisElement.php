@@ -30,6 +30,12 @@ class AddThisElement extends RenderElement {
   }
 
 
+  /**
+   * Implements preRenderAddThisElement()
+   *  - Defines consistent markup for new render type of addthis_element.
+   * @param $element
+   * @return mixed
+   */
   public static function preRenderAddThisElement($element){
     if (!isset($element['#value'])) {
       $element['addthis_element'] = [
