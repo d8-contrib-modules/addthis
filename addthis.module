@@ -24,8 +24,8 @@ function addthis_page_attachments(array &$page){
 
 // Include the widget js when we include on all but admin pages.
   //if (!path_is_admin(current_path()) && AddThis::getInstance()->getWidgetJsInclude() == AddThis::WIDGET_JS_INCLUDE_PAGE) {
-  $manager = \Drupal\addthis\Services\AddThisScriptManager::getInstance();
-  $manager->attachJsToElement($page);
+  //$manager = \Drupal\addthis\Services\AddThisScriptManager::getInstance();
+  //$manager->attachJsToElement($page);
   //}
 
 }
