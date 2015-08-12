@@ -31,11 +31,11 @@ For link sharing statistics registration at http://addthis.com/ is required, but
 the module will work even without registration.
 
 -- INCLUDED MODULES --
-addthis - Provides the base API to integrate with AddThis. Also creates RenderElements,
+**addthis** - Provides the base API to integrate with AddThis. Also creates RenderElements,
 base Twig templates and global admin settings for AddThis. Does not provide any
 rendering functionality on its own.
-addthis_block - Provides a configurable block for displaying AddThis.
-addthis_fields - Provides two field formatters for AddThis to allow for rendering on
+**addthis_block** - Provides a configurable block for displaying AddThis.
+**addthis_fields** - Provides two field formatters for AddThis to allow for rendering on
 entities.
 
 -- CONFIGURATION --
