@@ -172,7 +172,7 @@ class AddThisSettingsForm extends ConfigFormBase {
     $can_track_clicks = empty($profile_id) ? FALSE : TRUE;
     $form['fieldset_analytics'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Analytics & Tracking'),
+      '#title' => t('Analytics and Tracking'),
       '#collapsible' => TRUE,
       '#collapsed' => $can_track_clicks ? TRUE : FALSE,
     );

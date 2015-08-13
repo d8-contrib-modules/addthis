@@ -65,7 +65,7 @@ addthis.settings:
             label: 'Services Excluded'
     analytics:
       type: mapping
-      label: 'Analytics & Tracking'
+      label: 'Analytics and Tracking'
       mapping:
         addthis_profile_id:
             type: string
