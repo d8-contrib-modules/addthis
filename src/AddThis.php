@@ -8,6 +8,7 @@ namespace Drupal\addthis;
 
 use Drupal\addthis\Util\AddThisJson;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\addthis\Services\AddThisScriptManager;
 
 class AddThis {
   const BLOCK_NAME = 'addthis_block';
@@ -302,6 +303,162 @@ class AddThis {
   }
 
 
+  public function getBasicButtonForm($parent_class, $options){
+    $element = array();
+
+    $element['button_size'] = array(
+      '#title' => t('Image'),
+      '#type' => 'select',
+      '#default_value' => $options['button_size'],
+      '#options' => array(
+        'small' => t('Small'),
+        'big' => t('Big'),
+      ),
+    );
+    $element['extra_css'] = array(
+      '#title' => t('Extra CSS declaration'),
+      '#type' => 'textfield',
+      '#size' => 40,
+      '#default_value' => $options['extra_css'],
+      '#description' => t('Specify extra CSS classes to apply to the button'),
+    );
+
+    return $element;
+  }
+
+
+  function getBasicToolboxMarkup($settings){
+    $element = array(
+      '#type' => 'addthis_wrapper',
+      '#tag' => 'div',
+      '#attributes' => array(
+        'class' => array(
+          'addthis_toolbox',
+          'addthis_default_style',
+          ($settings['buttons_size'] == AddThis::CSS_32x32 ? AddThis::CSS_32x32 : NULL),
+          $settings['extra_css'],
+        ),
+      ),
+    );
+
+    // Add the widget script.
+    $script_manager = AddThisScriptManager::getInstance();
+    $script_manager->attachJsToElement($element);
+
+
+    $services = trim($settings['share_services']);
+    $services = str_replace(' ', '', $services);
+    $services = explode(',', $services);
+    $items = array();
+
+    // All service elements
+    $items = array();
+    foreach ($services as $service) {
+      $items[$service] = array(
+        '#type' => 'addthis_element',
+        '#tag' => 'a',
+        '#value' => '',
+        '#attributes' => array(
+          'href' => AddThis::getInstance()->getBaseBookmarkUrl(),
+          'class' => array(
+            'addthis_button_' . $service,
+          ),
+        ),
+        '#addthis_service' => $service,
+      );
+
+      // Add individual counters.
+      if (strpos($service, 'counter_') === 0) {
+        $items[$service]['#attributes']['class'] = array("addthis_$service");
+      }
+
+      // Basic implementations of bubble counter orientation.
+      // @todo Figure all the bubbles out and add them.
+      //   Still missing: tweetme, hyves and stubleupon, google_plusone_badge.
+      //
+      $orientation = ($settings['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
+      switch ($service) {
+        case 'linkedin_counter':
+          $items[$service]['#attributes'] += array(
+            'li:counter' => ($orientation ? '' : 'top'),
+          );
+          break;
+        case 'facebook_like':
+          $items[$service]['#attributes'] += array(
+            'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
+          );
+          break;
+        case 'facebook_share':
+          $items[$service]['#attributes'] += array(
+            'fb:share:layout' => ($orientation ? 'button_count' : 'box_count')
+          );
+          break;
+        case 'google_plusone':
+          $items[$service]['#attributes'] += array(
+            'g:plusone:size' => ($orientation ? 'standard' : 'tall')
+          );
+          break;
+        case 'tweet':
+          $items[$service]['#attributes'] += array(
+            'tw:count' => ($orientation ? 'horizontal' : 'vertical'),
+            'tw:via' => AddThis::getInstance()->getTwitterVia(),
+          );
+          break;
+        case 'bubble_style':
+          $items[$service]['#attributes']['class'] = array(
+            'addthis_counter', 'addthis_bubble_style'
+          );
+          break;
+        case 'pill_style':
+          $items[$service]['#attributes']['class'] = array(
+            'addthis_counter', 'addthis_pill_style'
+          );
+          break;
+      }
+    }
+
+    $element += $items;
+
+    return render($element);
+  }
+
+
+  function getBasicButtonMarkup($settings){
+    $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
+    if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
+      $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';
+    }
+    //$button_img = $addthis->transformToSecureUrl($button_img);
+
+    //$extra_css = isset($settings['extra_css']) ? $settings['extra_css'] : '';
+    $element = array(
+      '#type' => 'addthis_wrapper',
+      '#tag' => 'a',
+      '#attributes' => array(
+        'class' => array(
+          'addthis_button',
+        ),
+      ),
+    );
+    //$element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
+
+    // Add the widget script.
+    $script_manager = AddThisScriptManager::getInstance();
+    $script_manager->attachJsToElement($element);
+
+    // Create img button.
+    $image = array(
+      '#type' => 'addthis_element',
+      '#tag' => 'img',
+      '#attributes' => array(
+        'src' => $button_img,
+        'alt' => t('Share page with AddThis'),
+      ),
+    );
+    $element[] = $image;
+
+    return render($element);
+  }
 
 
 }
