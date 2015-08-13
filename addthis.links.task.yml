@@ -1,8 +1,0 @@
-addthis.settings:
-  title: 'Basic'
-  route_name: addthis.settings
-  base_route: addthis.settings
-addthis.settings.advanced:
-  title: 'Advanced'
-  route_name: addthis.settings.advanced
-  base_route: addthis.settings
