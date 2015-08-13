@@ -115,7 +115,12 @@ class AddThis {
       foreach ($services['data'] as $service) {
         $serviceCode = SafeMarkup::checkPlain($service['code']);
         $serviceName = SafeMarkup::checkPlain($service['name']);
-        $rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
+        $service = array(
+          '#type' => 'inline_template',
+          '#template' => '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName,
+        );
+        //$rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
+        $rows[$serviceCode] = $service;
       }
     }
     return $rows;
