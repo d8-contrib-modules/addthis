@@ -107,22 +107,25 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
+
+    $widget_settings = $this->getSettings();
+
     $element = array(
       '#type' => 'addthis_wrapper',
-      '#tag' => 'a',
+      '#tag' => 'div',
       '#attributes' => array(
         'class' => array(
-          'addthis_button',
+          'addthis_toolbox',
+          'addthis_default_style',
+          ($widget_settings['buttons_size'] == AddThis::CSS_32x32 ? AddThis::CSS_32x32 : NULL),
+          $widget_settings['extra_css'],
         ),
       ),
     );
 
-
     // Add the widget script.
     $script_manager = AddThisScriptManager::getInstance();
     $script_manager->attachJsToElement($element);
-
-    $widget_settings = $this->getSettings();
 
     $services = trim($widget_settings['share_services']);
     $services = str_replace(' ', '', $services);

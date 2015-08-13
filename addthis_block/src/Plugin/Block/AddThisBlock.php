@@ -40,21 +40,23 @@ class AddThisBlock extends BlockBase
    */
   public function build()
   {
+    $config = $this->configuration;
     $element = array(
       '#type' => 'addthis_wrapper',
-      '#tag' => 'a',
+      '#tag' => 'div',
       '#attributes' => array(
         'class' => array(
-          'addthis_button',
+          'addthis_toolbox',
+          'addthis_default_style',
+          ($config['buttons_size'] == AddThis::CSS_32x32 ? AddThis::CSS_32x32 : NULL),
+          $config['extra_css'],
         ),
       ),
     );
+
     // Add the widget script.
     $script_manager = AddThisScriptManager::getInstance();
     $script_manager->attachJsToElement($element);
-
-
-    $config = $this->configuration;
 
     $services = trim($config['share_services']);
     $services = str_replace(' ', '', $services);
@@ -130,6 +132,7 @@ class AddThisBlock extends BlockBase
     $element += $items;
 
     $markup = render($element);
+
     return array(
       '#markup' => $markup
     );
