@@ -42,7 +42,9 @@ class AddThisBlock extends BlockBase
     );
   }
 
-
+  /**
+   * {@inheritdoc}
+   */
   function blockForm($form, FormStateInterface $form_state)
   {
 
@@ -91,10 +93,19 @@ class AddThisBlock extends BlockBase
     return $form;
   }
 
+  /**
+   * Callback for AddThisBlock blockForm() to control sub-settings based on display type.
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return mixed
+   */
   public function addthisAjaxCallback(array $form, FormStateInterface $form_state){
     return $form['settings']['settings']['addthis_settings']['type_settings'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function blockSubmit($form, FormStateInterface $form_state)
   {
     $this->configuration['type'] = $form_state->getValue(['settings', 'addthis_settings', 'type']);

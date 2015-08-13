@@ -303,6 +303,14 @@ class AddThis {
   }
 
 
+  /**
+   *
+   * Returns the basicButtonForm elements to be used in the Field and Block implementation.
+   *
+   * @param $parent_class
+   * @param $options
+   * @return array
+   */
   public function getBasicButtonForm($parent_class, $options){
     $element = array();
 
@@ -326,7 +334,12 @@ class AddThis {
     return $element;
   }
 
-
+  /**
+   * Returns rendered markup for the BasicToolbox display. This will be called
+   * from both the Field and Block render functions.
+   * @param $settings
+   * @return null
+   */
   function getBasicToolboxMarkup($settings){
     $element = array(
       '#type' => 'addthis_wrapper',
@@ -423,6 +436,12 @@ class AddThis {
   }
 
 
+  /**
+   * Returns rendered markup for the BasicButton display. This will be called
+   * from both the Field and Block render functions.
+   * @param $settings
+   * @return null
+   */
   function getBasicButtonMarkup($settings){
     $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
     if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
