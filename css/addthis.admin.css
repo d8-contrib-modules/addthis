@@ -18,3 +18,8 @@
 #edit-addthis-enabled-services .addthis_service_icon {
   display: inline-block;
 }
+
+#edit-addthis-excluded-services .addthis_service_icon,
+#edit-addthis-enabled-services .addthis_service_icon {
+  margin-bottom: -1.5px;
+}
