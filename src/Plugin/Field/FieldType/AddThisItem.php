@@ -66,12 +66,17 @@ class AddThisItem extends FieldItemBase {
     $constraints = parent::getConstraints();
 
     if ($max_length = $this->getSetting('max_length')) {
-      $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+      $constraint_manager = \Drupal::typedDataManager()
+        ->getValidationConstraintManager();
       $constraints[] = $constraint_manager->create('ComplexData', array(
         'value' => array(
           'Length' => array(
             'max' => $max_length,
-            'maxMessage' => t('%name: may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length)),
+            'maxMessage' => t('%name: may not be longer than @max characters.', array(
+              '%name' => $this->getFieldDefinition()
+                ->getLabel(),
+              '@max' => $max_length
+            )),
           ),
         ),
       ));

@@ -167,7 +167,7 @@ class AddThisSettingsForm extends ConfigFormBase {
       '#columns' => 3,
     );
 
-     //Analytics settings.
+    //Analytics settings.
     $profile_id = $config->get('analytics.addthis_profile_id');
     $can_track_clicks = empty($profile_id) ? FALSE : TRUE;
     $form['fieldset_analytics'] = array(
@@ -233,9 +233,10 @@ class AddThisSettingsForm extends ConfigFormBase {
     );
 
     // Google Analytics and Google Social Tracking support.
-    $can_do_google_social_tracking = \Drupal::moduleHandler()->moduleExists('googleanalytics');
+    $can_do_google_social_tracking = \Drupal::moduleHandler()
+      ->moduleExists('googleanalytics');
     //@TODO Get back to this.
-    $google_analytics_config = \Drupal::config(google_analytics.settings);
+    $google_analytics_config = \Drupal::config(google_analytics . settings);
     $google_analytics_account = $google_analytics_config->get('google_analytics_account');
     $is_google_analytics_setup = $can_do_google_social_tracking && isset($google_analytics_account);
     $form['fieldset_analytics']['google_analytics'] = array(

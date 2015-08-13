@@ -76,7 +76,8 @@ class AddThisSettingsAdvancedForm extends ConfigFormBase {
     $form['advanced_settings_fieldset'] = array(
       '#type' => 'fieldset',
       '#title' => t('Advanced settings'),
-      '#access' => \Drupal::currentUser()->hasPermission('administer advanced addthis'),
+      '#access' => \Drupal::currentUser()
+        ->hasPermission('administer advanced addthis'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );

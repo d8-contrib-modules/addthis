@@ -100,17 +100,19 @@ class AddThis {
     $this->json = $json;
   }
 
-  public function setConfig(){
+  public function setConfig() {
     $this->config = \Drupal::config('addthis.settings');
   }
-
 
 
   public function getServices() {
     $rows = array();
     $services = $this->json->decode($this->getServicesJsonUrl());
     if (empty($services)) {
-      drupal_set_message(t('AddThis services could not be loaded from @service_url', array('@service_url', $this->getServicesJsonUrl())), 'warning');
+      drupal_set_message(t('AddThis services could not be loaded from @service_url', array(
+        '@service_url',
+        $this->getServicesJsonUrl()
+      )), 'warning');
     }
     else {
       foreach ($services['data'] as $service) {
@@ -137,7 +139,8 @@ class AddThis {
     $settings = $block_widget_settings;
 
     if ($settings == NULL && $widget_type != self::WIDGET_TYPE_DISABLED) {
-      $settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($widget_type);
+      $settings = \Drupal::service('plugin.manager.field.formatter')
+        ->getDefaultSettings($widget_type);
 
     }
 
@@ -156,7 +159,6 @@ class AddThis {
     $service_json_url_key = isset($service_json_url_key) ? $service_json_url_key : self::DEFAULT_SERVICES_JSON_URL;
     return check_url($service_json_url_key);
   }
-
 
 
   /**
@@ -222,7 +224,6 @@ class AddThis {
   }
 
 
-
   public function getFullBookmarkUrl() {
     return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
@@ -255,7 +256,7 @@ class AddThis {
    * @param $options
    * @return array
    */
-  public function getBasicToolboxForm($parent_class, $options){
+  public function getBasicToolboxForm($parent_class, $options) {
     $element = array();
 
     $element['share_services'] = array(
@@ -265,7 +266,10 @@ class AddThis {
       '#default_value' => $options['share_services'],
       '#required' => TRUE,
       //Validate function is defined in addthis.module.
-      '#element_validate' => array($parent_class, 'addThisDisplayElementServicesValidate'),
+      '#element_validate' => array(
+        $parent_class,
+        'addThisDisplayElementServicesValidate'
+      ),
       '#description' =>
         t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
         t('Elements that are available but not ont the services list are (!services).',
@@ -311,7 +315,7 @@ class AddThis {
    * @param $options
    * @return array
    */
-  public function getBasicButtonForm($parent_class, $options){
+  public function getBasicButtonForm($parent_class, $options) {
     $element = array();
 
     $element['button_size'] = array(
@@ -340,7 +344,7 @@ class AddThis {
    * @param $settings
    * @return null
    */
-  function getBasicToolboxMarkup($settings){
+  function getBasicToolboxMarkup($settings) {
     $element = array(
       '#type' => 'addthis_wrapper',
       '#tag' => 'div',
@@ -419,12 +423,14 @@ class AddThis {
           break;
         case 'bubble_style':
           $items[$service]['#attributes']['class'] = array(
-            'addthis_counter', 'addthis_bubble_style'
+            'addthis_counter',
+            'addthis_bubble_style'
           );
           break;
         case 'pill_style':
           $items[$service]['#attributes']['class'] = array(
-            'addthis_counter', 'addthis_pill_style'
+            'addthis_counter',
+            'addthis_pill_style'
           );
           break;
       }
@@ -442,7 +448,7 @@ class AddThis {
    * @param $settings
    * @return null
    */
-  function getBasicButtonMarkup($settings){
+  function getBasicButtonMarkup($settings) {
     $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
     if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
       $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';

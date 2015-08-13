@@ -22,14 +22,12 @@ use Drupal\addthis\AddThis;
  *   }
  * )
  */
-class AddThisBasicToolboxFormatter extends FormatterBase
-{
+class AddThisBasicToolboxFormatter extends FormatterBase {
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings()
-  {
+  public static function defaultSettings() {
     return array(
       'share_services' => 'facebook,twitter',
       'buttons_size' => 'addthis_16x16_style',
@@ -41,8 +39,7 @@ class AddThisBasicToolboxFormatter extends FormatterBase
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state)
-  {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
 
     $settings = $this->getSettings();
     $element = array();
@@ -56,8 +53,7 @@ class AddThisBasicToolboxFormatter extends FormatterBase
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items)
-  {
+  public function viewElements(FieldItemListInterface $items) {
     $settings = $this->getSettings();
 
     $markup = AddThis::getInstance()->getBasicToolboxMarkup($settings);
