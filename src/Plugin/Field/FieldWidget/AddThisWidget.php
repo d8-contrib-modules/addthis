@@ -29,8 +29,7 @@ class AddThisWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
-    ) + parent::defaultSettings();
+    return array() + parent::defaultSettings();
   }
 
   /**

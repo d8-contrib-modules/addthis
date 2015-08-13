@@ -8,6 +8,7 @@ namespace Drupal\addthis;
 
 use Drupal\addthis\Util\AddThisJson;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\addthis\Services\AddThisScriptManager;
 
 class AddThis {
   const BLOCK_NAME = 'addthis_block';
@@ -99,17 +100,19 @@ class AddThis {
     $this->json = $json;
   }
 
-  public function setConfig(){
+  public function setConfig() {
     $this->config = \Drupal::config('addthis.settings');
   }
-
 
 
   public function getServices() {
     $rows = array();
     $services = $this->json->decode($this->getServicesJsonUrl());
     if (empty($services)) {
-      drupal_set_message(t('AddThis services could not be loaded from @service_url', array('@service_url', $this->getServicesJsonUrl())), 'warning');
+      drupal_set_message(t('AddThis services could not be loaded from @service_url', array(
+        '@service_url',
+        $this->getServicesJsonUrl()
+      )), 'warning');
     }
     else {
       foreach ($services['data'] as $service) {
@@ -136,7 +139,8 @@ class AddThis {
     $settings = $block_widget_settings;
 
     if ($settings == NULL && $widget_type != self::WIDGET_TYPE_DISABLED) {
-      $settings =  \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($widget_type);
+      $settings = \Drupal::service('plugin.manager.field.formatter')
+        ->getDefaultSettings($widget_type);
 
     }
 
@@ -155,7 +159,6 @@ class AddThis {
     $service_json_url_key = isset($service_json_url_key) ? $service_json_url_key : self::DEFAULT_SERVICES_JSON_URL;
     return check_url($service_json_url_key);
   }
-
 
 
   /**
@@ -221,7 +224,6 @@ class AddThis {
   }
 
 
-
   public function getFullBookmarkUrl() {
     return $this->getBaseBookmarkUrl() . $this->getProfileIdQueryParameterPrefixedWithAmp();
   }
@@ -248,6 +250,240 @@ class AddThis {
     return $displays;
   }
 
+  /**
+   * Provides options for the BasicToolboxForm. This is used in field & block
+   * configurations.
+   * @param $options
+   * @return array
+   */
+  public function getBasicToolboxForm($parent_class, $options) {
+    $element = array();
+
+    $element['share_services'] = array(
+      '#title' => t('Services'),
+      '#type' => 'textfield',
+      '#size' => 80,
+      '#default_value' => $options['share_services'],
+      '#required' => TRUE,
+      //Validate function is defined in addthis.module.
+      '#element_validate' => array(
+        $parent_class,
+        'addThisDisplayElementServicesValidate'
+      ),
+      '#description' =>
+        t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
+        t('Elements that are available but not ont the services list are (!services).',
+          array('!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge, counter_* (several supported services), linkedin_counter')
+        ),
+    );
+    $element['buttons_size'] = array(
+      '#title' => t('Buttons size'),
+      '#type' => 'select',
+      '#default_value' => $options['buttons_size'],
+      '#options' => array(
+        'addthis_16x16_style' => t('Small (16x16)'),
+        'addthis_32x32_style' => t('Big (32x32)'),
+      ),
+    );
+    $element['counter_orientation'] = array(
+      '#title' => t('Counter orientation'),
+      '#description' => t('Specify the way service counters are oriented.'),
+      '#type' => 'select',
+      '#default_value' => $options['counter_orientation'],
+      '#options' => array(
+        'horizontal' => t('Horizontal'),
+        'vertical' => t('Vertical'),
+      )
+    );
+    $element['extra_css'] = array(
+      '#title' => t('Extra CSS declaration'),
+      '#type' => 'textfield',
+      '#size' => 40,
+      '#default_value' => $options['extra_css'],
+      '#description' => t('Specify extra CSS classes to apply to the toolbox'),
+    );
+
+    return $element;
+  }
+
+
+  /**
+   *
+   * Returns the basicButtonForm elements to be used in the Field and Block implementation.
+   *
+   * @param $parent_class
+   * @param $options
+   * @return array
+   */
+  public function getBasicButtonForm($parent_class, $options) {
+    $element = array();
+
+    $element['button_size'] = array(
+      '#title' => t('Image'),
+      '#type' => 'select',
+      '#default_value' => $options['button_size'],
+      '#options' => array(
+        'small' => t('Small'),
+        'big' => t('Big'),
+      ),
+    );
+    $element['extra_css'] = array(
+      '#title' => t('Extra CSS declaration'),
+      '#type' => 'textfield',
+      '#size' => 40,
+      '#default_value' => $options['extra_css'],
+      '#description' => t('Specify extra CSS classes to apply to the button'),
+    );
+
+    return $element;
+  }
+
+  /**
+   * Returns rendered markup for the BasicToolbox display. This will be called
+   * from both the Field and Block render functions.
+   * @param $settings
+   * @return null
+   */
+  function getBasicToolboxMarkup($settings) {
+    $element = array(
+      '#type' => 'addthis_wrapper',
+      '#tag' => 'div',
+      '#attributes' => array(
+        'class' => array(
+          'addthis_toolbox',
+          'addthis_default_style',
+          ($settings['buttons_size'] == AddThis::CSS_32x32 ? AddThis::CSS_32x32 : NULL),
+          $settings['extra_css'],
+        ),
+      ),
+    );
+
+    // Add the widget script.
+    $script_manager = AddThisScriptManager::getInstance();
+    $script_manager->attachJsToElement($element);
+
+
+    $services = trim($settings['share_services']);
+    $services = str_replace(' ', '', $services);
+    $services = explode(',', $services);
+    $items = array();
+
+    // All service elements
+    $items = array();
+    foreach ($services as $service) {
+      $items[$service] = array(
+        '#type' => 'addthis_element',
+        '#tag' => 'a',
+        '#value' => '',
+        '#attributes' => array(
+          'href' => AddThis::getInstance()->getBaseBookmarkUrl(),
+          'class' => array(
+            'addthis_button_' . $service,
+          ),
+        ),
+        '#addthis_service' => $service,
+      );
+
+      // Add individual counters.
+      if (strpos($service, 'counter_') === 0) {
+        $items[$service]['#attributes']['class'] = array("addthis_$service");
+      }
+
+      // Basic implementations of bubble counter orientation.
+      // @todo Figure all the bubbles out and add them.
+      //   Still missing: tweetme, hyves and stubleupon, google_plusone_badge.
+      //
+      $orientation = ($settings['counter_orientation'] == 'horizontal' ? TRUE : FALSE);
+      switch ($service) {
+        case 'linkedin_counter':
+          $items[$service]['#attributes'] += array(
+            'li:counter' => ($orientation ? '' : 'top'),
+          );
+          break;
+        case 'facebook_like':
+          $items[$service]['#attributes'] += array(
+            'fb:like:layout' => ($orientation ? 'button_count' : 'box_count')
+          );
+          break;
+        case 'facebook_share':
+          $items[$service]['#attributes'] += array(
+            'fb:share:layout' => ($orientation ? 'button_count' : 'box_count')
+          );
+          break;
+        case 'google_plusone':
+          $items[$service]['#attributes'] += array(
+            'g:plusone:size' => ($orientation ? 'standard' : 'tall')
+          );
+          break;
+        case 'tweet':
+          $items[$service]['#attributes'] += array(
+            'tw:count' => ($orientation ? 'horizontal' : 'vertical'),
+            'tw:via' => AddThis::getInstance()->getTwitterVia(),
+          );
+          break;
+        case 'bubble_style':
+          $items[$service]['#attributes']['class'] = array(
+            'addthis_counter',
+            'addthis_bubble_style'
+          );
+          break;
+        case 'pill_style':
+          $items[$service]['#attributes']['class'] = array(
+            'addthis_counter',
+            'addthis_pill_style'
+          );
+          break;
+      }
+    }
+
+    $element += $items;
+
+    return render($element);
+  }
+
+
+  /**
+   * Returns rendered markup for the BasicButton display. This will be called
+   * from both the Field and Block render functions.
+   * @param $settings
+   * @return null
+   */
+  function getBasicButtonMarkup($settings) {
+    $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
+    if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
+      $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';
+    }
+    //$button_img = $addthis->transformToSecureUrl($button_img);
+
+    //$extra_css = isset($settings['extra_css']) ? $settings['extra_css'] : '';
+    $element = array(
+      '#type' => 'addthis_wrapper',
+      '#tag' => 'a',
+      '#attributes' => array(
+        'class' => array(
+          'addthis_button',
+        ),
+      ),
+    );
+    //$element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
+
+    // Add the widget script.
+    $script_manager = AddThisScriptManager::getInstance();
+    $script_manager->attachJsToElement($element);
+
+    // Create img button.
+    $image = array(
+      '#type' => 'addthis_element',
+      '#tag' => 'img',
+      '#attributes' => array(
+        'src' => $button_img,
+        'alt' => t('Share page with AddThis'),
+      ),
+    );
+    $element[] = $image;
+
+    return render($element);
+  }
 
 
 }

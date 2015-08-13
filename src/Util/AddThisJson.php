@@ -18,7 +18,8 @@ class AddThisJson {
       $response = \Drupal::httpClient()
         ->get($url)
         ->getBody(TRUE);
-    } catch (RequestException $e) {
+    }
+    catch (RequestException $e) {
       // Do some stuff in case of the error.
     }
 
