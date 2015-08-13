@@ -4,11 +4,11 @@ addthis.settings:
     _form: '\Drupal\addthis\Form\AddThisSettingsForm'
     _title: 'AddThis'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer addthis settings'
 addthis.settings.advanced:
   path: '/admin/config/user-interface/addthis/advanced'
   defaults:
     _form: '\Drupal\addthis\Form\AddThisSettingsAdvancedForm'
     _title: 'AddThis Advanced Settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer advanced addthis settings'
