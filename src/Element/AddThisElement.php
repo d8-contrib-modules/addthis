@@ -36,11 +36,11 @@ class AddThisElement extends RenderElement {
    * @param $element
    * @return mixed
    */
-  public static function preRenderAddThisElement($element){
+  public static function preRenderAddThisElement($element) {
     if (!isset($element['#value'])) {
       $element['addthis_element'] = [
         '#markup' => '<' . $element['#tag'] . new Attribute($element['#attributes']) . " />\n"
-        ];
+      ];
       return $element;
     }
 
@@ -55,7 +55,7 @@ class AddThisElement extends RenderElement {
     $output .= '</' . $element['#tag'] . ">\n";
     $element['addthis_element'] = [
       '#markup' => $output,
-      ];
+    ];
 
     return $element;
   }

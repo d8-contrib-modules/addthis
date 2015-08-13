@@ -9,6 +9,7 @@ namespace Drupal\addthis\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Element;
+
 /**
  * Class AddThisElement
  *
@@ -35,18 +36,18 @@ class AddThisWrapper extends RenderElement {
    * @param $element
    * @return mixed
    */
-  public static function preRenderAddThisWrapper($element){
+  public static function preRenderAddThisWrapper($element) {
     $output = '<' . $element['#tag'] . new Attribute($element['#attributes']) . '>';
     $children = Element::children($element);
-     if (count($children) > 0) {
-       foreach ($children as $child) {
-         $output .= render($element[$child]);
-       }
-     }
+    if (count($children) > 0) {
+      foreach ($children as $child) {
+        $output .= render($element[$child]);
+      }
+    }
     $output .= '</' . $element['#tag'] . ">  \n";
     $element['addthis_wrapper'] = [
       '#markup' => $output
-      ];
+    ];
 
     return $element;
   }

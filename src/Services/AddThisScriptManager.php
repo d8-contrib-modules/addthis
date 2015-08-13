@@ -27,8 +27,10 @@ class AddThisScriptManager {
    * Construct method.
    */
   private function __construct() {
-    $this->async = \Drupal::config('addthis.settings.advanced')->get('addthis_widget_load_async');
-    $this->domready = \Drupal::config('addthis.settings.advanced')->get('addthis_widget_load_domready');
+    $this->async = \Drupal::config('addthis.settings.advanced')
+      ->get('addthis_widget_load_async');
+    $this->domready = \Drupal::config('addthis.settings.advanced')
+      ->get('addthis_widget_load_domready');
   }
 
   /**
@@ -52,7 +54,8 @@ class AddThisScriptManager {
    *   A url reference to the widget js.
    */
   public function getWidgetJsUrl() {
-    return check_url(\Drupal::config('addthis.settings.advanced')->get('addthis_widget_js_url'));
+    return check_url(\Drupal::config('addthis.settings.advanced')
+      ->get('addthis_widget_js_url'));
   }
 
   /**
@@ -79,7 +82,7 @@ class AddThisScriptManager {
   public function correctSchemaIfHttps($url) {
     if (is_string($url) && $this->isHttps()) {
       return str_replace('http://', 'https://', $url);
-    } 
+    }
     else {
       return $url;
     }
@@ -192,12 +195,13 @@ class AddThisScriptManager {
     );
     if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
       if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
-        $configuration['data_ga_property'] = \Drupal::config(google_analytics.settings)->get('google_analytics_account');
+        $configuration['data_ga_property'] = \Drupal::config(google_analytics . settings)
+          ->get('google_analytics_account');
         $configuration['data_ga_social'] = $config->get('analytics.addthis_google_analytics_social_tracking_enabled');
       }
     }
 
-   // drupal_alter('addthis_configuration', $configuration);
+    // drupal_alter('addthis_configuration', $configuration);
     return $configuration;
   }
 
@@ -220,7 +224,8 @@ class AddThisScriptManager {
         'templates' => $configuration['templates'],
       );
     }
-    $addthis_share['templates']['twitter'] = \Drupal::config('addthis.settings')->get('third_party.addthis_twitter_template');
+    $addthis_share['templates']['twitter'] = \Drupal::config('addthis.settings')
+      ->get('third_party.addthis_twitter_template');
 
     //drupal_alter('addthis_configuration_share', $configuration);
     return $addthis_share;
