@@ -148,7 +148,7 @@ class AddThisBlock extends BlockBase
     );
 
     $settings = $this->getConfiguration();
-    $elements = AddThis::getInstance()->getBasicToolboxForm($settings);
+    $elements = AddThis::getInstance()->getBasicToolboxForm($this, $settings);
 
     $form['settings']['addthis_settings'] += $elements;
 

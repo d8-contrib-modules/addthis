@@ -254,7 +254,7 @@ class AddThis {
    * @param $options
    * @return array
    */
-  public function getBasicToolboxForm($options){
+  public function getBasicToolboxForm($parent_class, $options){
     $element = array();
 
     $element['share_services'] = array(
@@ -263,7 +263,8 @@ class AddThis {
       '#size' => 80,
       '#default_value' => $options['share_services'],
       '#required' => TRUE,
-      '#element_validate' => array($this, 'addThisDisplayElementServicesValidate'),
+      //Validate function is defined in addthis.module.
+      '#element_validate' => array($parent_class, 'addThisDisplayElementServicesValidate'),
       '#description' =>
         t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
         t('Elements that are available but not ont the services list are (!services).',

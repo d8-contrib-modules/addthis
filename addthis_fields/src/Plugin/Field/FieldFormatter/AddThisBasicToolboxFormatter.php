@@ -48,28 +48,11 @@ class AddThisBasicToolboxFormatter extends FormatterBase
     $settings = $this->getSettings();
     $element = array();
 
-    AddThis::getInstance()->getBasicToolboxForm($settings);
+    AddThis::getInstance()->getBasicToolboxForm($this, $settings);
 
     return $element;
   }
 
-  public function addThisDisplayElementServicesValidate(array $element, FormStateInterface $form_state)
-  {
-    $bad = FALSE;
-
-    $services = trim($element['#value']);
-    $services = str_replace(' ', '', $services);
-
-    if (!preg_match('/^[a-z\_\,0-9]+$/', $services)) {
-      $bad = TRUE;
-    }
-    // @todo Validate the service names against AddThis.com. Give a notice when there are bad names.
-
-    // Return error.
-    if ($bad) {
-      form_error($element, t('The declared services are incorrect or nonexistent.'));
-    }
-  }
 
   /**
    * {@inheritdoc}
