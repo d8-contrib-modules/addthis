@@ -40,6 +40,7 @@ class AddThisBlock extends BlockBase
    */
   public function build()
   {
+
     $config = $this->configuration;
     $element = array(
       '#type' => 'addthis_wrapper',
@@ -57,6 +58,7 @@ class AddThisBlock extends BlockBase
     // Add the widget script.
     $script_manager = AddThisScriptManager::getInstance();
     $script_manager->attachJsToElement($element);
+
 
     $services = trim($config['share_services']);
     $services = str_replace(' ', '', $services);
@@ -132,7 +134,6 @@ class AddThisBlock extends BlockBase
     $element += $items;
 
     $markup = render($element);
-
     return array(
       '#markup' => $markup
     );
@@ -146,46 +147,11 @@ class AddThisBlock extends BlockBase
       '#title' => 'Display settings',
     );
 
+    $settings = $this->getConfiguration();
+    $elements = AddThis::getInstance()->getBasicToolboxForm($settings);
 
-    $form['settings']['addthis_settings']['share_services'] = array(
-      '#title' => t('Services'),
-      '#type' => 'textfield',
-      '#size' => 80,
-      '#default_value' => $this->configuration['share_services'],
-      '#required' => TRUE,
-      '#element_validate' => array($this, 'addThisDisplayElementServicesValidate'),
-      '#description' =>
-        t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
-        t('Elements that are available but not ont the services list are (!services).',
-          array('!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge, counter_* (several supported services), linkedin_counter')
-        ),
-    );
-    $form['settings']['addthis_settings']['buttons_size'] = array(
-      '#title' => t('Buttons size'),
-      '#type' => 'select',
-      '#default_value' => $this->configuration['buttons_size'],
-      '#options' => array(
-        'addthis_16x16_style' => t('Small (16x16)'),
-        'addthis_32x32_style' => t('Big (32x32)'),
-      ),
-    );
-    $form['settings']['addthis_settings']['counter_orientation'] = array(
-      '#title' => t('Counter orientation'),
-      '#description' => t('Specify the way service counters are oriented.'),
-      '#type' => 'select',
-      '#default_value' => $this->configuration['counter_orientation'],
-      '#options' => array(
-        'horizontal' => t('Horizontal'),
-        'vertical' => t('Vertical'),
-      )
-    );
-    $form['settings']['addthis_settings']['extra_css'] = array(
-      '#title' => t('Extra CSS declaration'),
-      '#type' => 'textfield',
-      '#size' => 40,
-      '#default_value' => $this->configuration['extra_css'],
-      '#description' => t('Specify extra CSS classes to apply to the toolbox'),
-    );
+    $form['settings']['addthis_settings'] += $elements;
+
     return $form;
   }
   public function blockSubmit($form, FormStateInterface $form_state) {

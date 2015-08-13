@@ -248,6 +248,59 @@ class AddThis {
     return $displays;
   }
 
+  /**
+   * Provides options for the BasicToolboxForm. This is used in field & block
+   * configurations.
+   * @param $options
+   * @return array
+   */
+  public function getBasicToolboxForm($options){
+    $element = array();
+
+    $element['share_services'] = array(
+      '#title' => t('Services'),
+      '#type' => 'textfield',
+      '#size' => 80,
+      '#default_value' => $options['share_services'],
+      '#required' => TRUE,
+      '#element_validate' => array($this, 'addThisDisplayElementServicesValidate'),
+      '#description' =>
+        t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
+        t('Elements that are available but not ont the services list are (!services).',
+          array('!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge, counter_* (several supported services), linkedin_counter')
+        ),
+    );
+    $element['buttons_size'] = array(
+      '#title' => t('Buttons size'),
+      '#type' => 'select',
+      '#default_value' => $options['buttons_size'],
+      '#options' => array(
+        'addthis_16x16_style' => t('Small (16x16)'),
+        'addthis_32x32_style' => t('Big (32x32)'),
+      ),
+    );
+    $element['counter_orientation'] = array(
+      '#title' => t('Counter orientation'),
+      '#description' => t('Specify the way service counters are oriented.'),
+      '#type' => 'select',
+      '#default_value' => $options['counter_orientation'],
+      '#options' => array(
+        'horizontal' => t('Horizontal'),
+        'vertical' => t('Vertical'),
+      )
+    );
+    $element['extra_css'] = array(
+      '#title' => t('Extra CSS declaration'),
+      '#type' => 'textfield',
+      '#size' => 40,
+      '#default_value' => $options['extra_css'],
+      '#description' => t('Specify extra CSS classes to apply to the toolbox'),
+    );
+
+    return $element;
+  }
+
+
 
 
 }
