@@ -41,31 +41,30 @@ class AddThisSettingsAdvancedForm extends ConfigFormBase {
     $form['#attached']['library'][] = 'addthis/addthis.admin';
 
     // Service URL's settings.
-    $form['service_urls_fieldset'] = array(
-      '#type' => 'fieldset',
+    $form['service_urls_details'] = array(
+      '#type' => 'details',
       '#title' => t('Service URLs'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#open' => TRUE,
     );
-    $form['service_urls_fieldset']['addthis_bookmark_url'] = array(
+    $form['service_urls_details']['addthis_bookmark_url'] = array(
       '#type' => 'textfield',
       '#title' => t('AddThis bookmark URL'),
       '#default_value' => $config->get('addthis_bookmark_url'),
       '#required' => TRUE,
     );
-    $form['service_urls_fieldset']['addthis_services_css_url'] = array(
+    $form['service_urls_details']['addthis_services_css_url'] = array(
       '#type' => 'textfield',
       '#title' => t('AddThis services stylesheet URL'),
       '#default_value' => $config->get('addthis_services_css_url'),
       '#required' => TRUE,
     );
-    $form['service_urls_fieldset']['addthis_services_json_url'] = array(
+    $form['service_urls_details']['addthis_services_json_url'] = array(
       '#type' => 'textfield',
       '#title' => t('AddThis services json URL'),
       '#default_value' => $config->get('addthis_services_json_url'),
       '#required' => TRUE,
     );
-    $form['service_urls_fieldset']['addthis_widget_js_url'] = array(
+    $form['service_urls_details']['addthis_widget_js_url'] = array(
       '#type' => 'textfield',
       '#title' => t('AddThis javascript widget URL'),
       '#default_value' => $config->get('addthis_widget_js_url'),
@@ -73,40 +72,39 @@ class AddThisSettingsAdvancedForm extends ConfigFormBase {
     );
 
     // Advanced settings.
-    $form['advanced_settings_fieldset'] = array(
-      '#type' => 'fieldset',
+    $form['advanced_settings_details'] = array(
+      '#type' => 'details',
       '#title' => t('Advanced settings'),
       '#access' => \Drupal::currentUser()
         ->hasPermission('administer advanced addthis'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#open' => TRUE,
     );
-    $form['advanced_settings_fieldset']['addthis_custom_configuration_code_enabled'] = array(
+    $form['advanced_settings_details']['addthis_custom_configuration_code_enabled'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use custom AddThis configuration code'),
       '#default_value' => $config->get('addthis_custom_configuration_code_enabled'),
       '#required' => FALSE,
       '#description' => t('Use custom AddThis configuration code. If checked, custom configuration will be used instead of other configuration settings provided in AddThis administration user interface.'),
     );
-    $form['advanced_settings_fieldset']['addthis_custom_configuration_code'] = array(
+    $form['advanced_settings_details']['addthis_custom_configuration_code'] = array(
       '#type' => 'textarea',
       '#title' => t('AddThis custom configuration code'),
       '#default_value' => $config->get('addthis_custom_configuration_code'),
       '#required' => FALSE,
       '#description' => t('AddThis custom configuration code. See format at <a href="http://addthis.com/" target="_blank">AddThis.com</a>'),
     );
-    $form['advanced_settings_fieldset']['addthis_widget_load_domready'] = array(
+    $form['advanced_settings_details']['addthis_widget_load_domready'] = array(
       '#type' => 'checkbox',
       '#title' => t('Load the AddThis resources after the DOM is ready.'),
       '#default_value' => $config->get('addthis_widget_load_domready'),
     );
-    $form['advanced_settings_fieldset']['addthis_widget_load_async'] = array(
+    $form['advanced_settings_details']['addthis_widget_load_async'] = array(
       '#type' => 'checkbox',
       '#title' => t('Initialize asynchronously through addthis.init().'),
       '#description' => t('Use this when you have your own Ajax functionality or create things after the DOM is ready trough Javascript. Initialize the addthis functionality through addthis.init().'),
       '#default_value' => $config->get('addthis_widget_load_async'),
     );
-    $form['advanced_settings_fieldset']['addthis_widget_include'] = array(
+    $form['advanced_settings_details']['addthis_widget_include'] = array(
       '#type' => 'select',
       '#title' => t('Load widget js.'),
       '#options' => array(
