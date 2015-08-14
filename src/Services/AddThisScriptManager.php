@@ -193,7 +193,7 @@ class AddThisScriptManager {
       'ui_open_windows' => $config->get('compact_menu.menu_style.addthis_open_windows_enabled'),
       'ui_use_css' => $config->get('compact_menu.additionals.addthis_standard_css_enabled'),
       'ui_use_addressbook' => $config->get('compact_menu.additionals.addthis_addressbook_enabled'),
-      'ui_language' => isset($language) ? $language->language : "und",
+      'ui_language' => isset($language) ? $language->language : LANGCODE_NOT_SPECIFIED,
     );
     if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
       if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
