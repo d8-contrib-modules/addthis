@@ -1,6 +1,9 @@
 <?php
 /**
  * @file
+ *
+ * Contains \Drupal\addthis\AddThisScriptManager
+ *
  * Class definition of a script manager.
  *
  * This class will be used on different places. The result of the attachJsToElement()
@@ -13,7 +16,7 @@
  * this class might get used based on the configuration.
  */
 
-namespace Drupal\addthis\Services;
+namespace Drupal\addthis;
 
 use Drupal\addthis\Util\AddThisWidgetJsUrl;
 
@@ -24,27 +27,29 @@ class AddThisScriptManager {
   private $domready = NULL;
 
   /**
-   * Construct method.
+   * @var \Drupal\Core\Language\LanguageManager
    */
-  private function __construct() {
-    $this->async = \Drupal::config('addthis.settings.advanced')
-      ->get('addthis_widget_load_async');
-    $this->domready = \Drupal::config('addthis.settings.advanced')
-      ->get('addthis_widget_load_domready');
-  }
+  protected $language_manager;
 
   /**
-   * Return a single instance of the AddThisScriptManager.
-   *
-   * @return AddThisScriptManager
+   * @var \Drupal\Core\Config\ConfigFactory
    */
-  public static function getInstance() {
-    static $manager;
+  protected $config_factory;
 
-    if (!isset($manager)) {
-      $manager = new AddThisScriptManager();
-    }
-    return $manager;
+  /**
+   * Construct function.
+   *
+   * @param \Drupal\Core\Language\LanguageManager $languageManager
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   */
+  public function __construct(\Drupal\Core\Language\LanguageManager $languageManager, \Drupal\Core\Config\ConfigFactory $configFactory) {
+    $this->language_manager = $languageManager;
+    $this->config_factory = $configFactory;
+
+    // TODO: Remove these from here. They can be referenced when we use them.
+    $config = $this->config_factory->get('addthis.settings.advanced');
+    $this->async = $config->get('addthis_widget_load_async');
+    $this->domready = $config->get('addthis_widget_load_domready');
   }
 
   /**
@@ -54,13 +59,14 @@ class AddThisScriptManager {
    *   A url reference to the widget js.
    */
   public function getWidgetJsUrl() {
-    return check_url(\Drupal::config('addthis.settings.advanced')
-      ->get('addthis_widget_js_url'));
+    // TODO: This uses a global function, why do we need to check the URL at this point?
+    return check_url($this->config_factory->get('addthis.settings.advanced')->get('addthis_widget_js_url'));
   }
 
   /**
    * Return if we are on https connection.
    *
+   * TODO: Why are we doing all of this URL processing?
    * @return bool
    *   TRUE if the current request is on https.
    */
@@ -73,6 +79,7 @@ class AddThisScriptManager {
   /**
    * Change the schema from http to https if we are on https.
    *
+   * TODO: Why are we doing all of this URL processing?
    * @param  string $url
    *   A full url.
    *
@@ -101,10 +108,11 @@ class AddThisScriptManager {
    *   The element to attach the JavaScript to.
    */
   public function attachJsToElement(&$element) {
-    $config = \Drupal::config('addthis.settings');
-    $adv_config = \Drupal::config('addthis.settings.advanced');
+    $config = $this->config_factory->get('addthis.settings');
+    $adv_config = $this->config_factory->get('addthis.settings.advanced');
     if ($adv_config->get('addthis_widget_js_include') !== 0) {
       $widget_js = new AddThisWidgetJsUrl($adv_config->get('addthis_widget_js_url'));
+
 
       $pubid = $config->get('analytics.addthis_profile_id');
       if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
@@ -116,14 +124,12 @@ class AddThisScriptManager {
         $widget_js->addAttribute('async', 1);
       }
 
-      $domready = $this->domready;
-      if ($domready) {
+      if ($this->domready) {
         $widget_js->addAttribute('domready', 1);
       }
-
-      // Only when the script is not loaded after the DOM is ready we include
-      // the script with #attached.
-      if (!$domready) {
+      else {
+        // Only when the script is not loaded after the DOM is ready we include
+        // the script with #attached.
         $element['#attached']['library'][] = 'addthis/addthis.widget';
       }
 
@@ -132,7 +138,7 @@ class AddThisScriptManager {
       // passed here.
       $element['#attached']['drupalSettings']['addthis'] = array(
         'async' => $async,
-        'domready' => $domready,
+        'domready' => $this->domready,
         'widget_url' => $this->getWidgetJsUrl(),
         'addthis_config' => $this->getJsAddThisConfig(),
         'addthis_share' => $this->getJsAddThisShare(),
@@ -171,10 +177,7 @@ class AddThisScriptManager {
    *   SRP is lost here.
    */
   private function getJsAddThisConfig() {
-
-    // TODO: find out why $language is returning null
-    global $language;
-    $config = \Drupal::config('addthis.settings');
+    $config = $this->config_factory->get('addthis.settings');
 
     $enabled_services = $this->getServiceNamesAsCommaSeparatedString($config->get('compact_menu.enabled_services.addthis_enabled_services')) . 'more';
     $excluded_services = $this->getServiceNamesAsCommaSeparatedString($config->get('excluded_services.addthis_excluded_services'));
@@ -193,12 +196,13 @@ class AddThisScriptManager {
       'ui_open_windows' => $config->get('compact_menu.menu_style.addthis_open_windows_enabled'),
       'ui_use_css' => $config->get('compact_menu.additionals.addthis_standard_css_enabled'),
       'ui_use_addressbook' => $config->get('compact_menu.additionals.addthis_addressbook_enabled'),
-      'ui_language' => isset($language) ? $language->language : LANGCODE_NOT_SPECIFIED,
+      // TODO: check that this returns what we want.
+      'ui_language' => $this->language_manager->getCurrentLanguage(),
     );
+    // TODO: Do we need to check if the module exists or can we just check the setting?
     if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
       if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
-        $configuration['data_ga_property'] = \Drupal::config(google_analytics . settings)
-          ->get('google_analytics_account');
+        $configuration['data_ga_property'] = $this->config_factory->get('google_analytics.settings')->get('google_analytics_account');
         $configuration['data_ga_social'] = $config->get('analytics.addthis_google_analytics_social_tracking_enabled');
       }
     }
@@ -226,7 +230,7 @@ class AddThisScriptManager {
         'templates' => $configuration['templates'],
       );
     }
-    $addthis_share['templates']['twitter'] = \Drupal::config('addthis.settings')
+    $addthis_share['templates']['twitter'] = $this->config_factory->get('addthis.settings')
       ->get('third_party.addthis_twitter_template');
 
     //drupal_alter('addthis_configuration_share', $configuration);

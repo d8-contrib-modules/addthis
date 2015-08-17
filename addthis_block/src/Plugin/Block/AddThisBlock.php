@@ -46,7 +46,8 @@ class AddThisBlock extends BlockBase {
   function blockForm($form, FormStateInterface $form_state) {
 
     // The list of formatters.
-    $formatter_options = AddThis::getInstance()->getDisplayTypes();
+    $add_this_service = \Drupal::service('addthis.addthis');
+    $formatter_options = $add_this_service->getDisplayTypes();
     $settings = $this->getConfiguration();
 
     $type = $settings['type'];
@@ -88,13 +89,13 @@ class AddThisBlock extends BlockBase {
       '#suffix' => '</div>',
     );
     if ($type == 'addthis_basic_toolbox') {
-      $basicToolbox = AddThis::getInstance()
+      $basicToolbox = $add_this_service
         ->getBasicToolboxForm($this, $settings['basic_toolbox']);
       $form['settings']['addthis_settings']['type_settings']['basic_toolbox'] = $basicToolbox;
     }
     else {
       if ($type == 'addthis_basic_button') {
-        $basicButton = AddThis::getInstance()
+        $basicButton = $add_this_service
           ->getBasicButtonForm($this, $settings['basic_button']);
         $form['settings']['addthis_settings']['type_settings']['basic_button'] = $basicButton;
       }
@@ -173,27 +174,23 @@ class AddThisBlock extends BlockBase {
    */
   public function build() {
     $config = $this->configuration;
+
     switch ($config['type']) {
       case 'addthis_basic_button':
-        $markup = AddThis::getInstance()
-          ->getBasicButtonMarkup($config['basic_button']);
+        return [
+          '#type' => 'addthis_basic_button',
+          '#size' => $config['basic_button']['button_size'],
+        ];
         break;
       case 'addthis_basic_toolbox':
-        $markup = AddThis::getInstance()
-          ->getBasicToolboxMarkup($config['basic_toolbox']);
-        break;
-      default:
-        $markup = '';
+        return [
+          '#type' => 'addthis_basic_toolbox',
+        ];
         break;
     }
 
-    return array(
-      '#markup' => $markup
-    );
-
+    return [
+      '#markup' => ''
+    ];
   }
-
-
 }
-
-?>

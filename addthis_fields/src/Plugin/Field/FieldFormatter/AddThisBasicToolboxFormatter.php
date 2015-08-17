@@ -43,8 +43,8 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
 
     $settings = $this->getSettings();
     $element = array();
-
-    AddThis::getInstance()->getBasicToolboxForm($this, $settings);
+    $add_this_service = \Drupal::service('addthis.addthis');
+    $add_this_service->getBasicToolboxForm($this, $settings);
 
     return $element;
   }
@@ -56,7 +56,8 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $settings = $this->getSettings();
 
-    $markup = AddThis::getInstance()->getBasicToolboxMarkup($settings);
+    $add_this_service = \Drupal::service('addthis.addthis');
+    $markup = $add_this_service->getBasicToolboxMarkup($settings);
 
     return array(
       '#markup' => $markup

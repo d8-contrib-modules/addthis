@@ -1,0 +1,10 @@
+services:
+  # AddThis service?
+  addthis.addthis:
+    class: Drupal\addthis\AddThis
+    arguments: ['@addthis.script_manager', '@config.factory']
+
+  # This service creates a more complex access check.
+  addthis.script_manager:
+    class: Drupal\addthis\AddThisScriptManager
+    arguments: ['@language_manager', '@config.factory']

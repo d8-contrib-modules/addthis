@@ -1,6 +1,9 @@
 <?php
 /**
  * @file
+ *
+ * Contains \Drupal\addthis\AddThis.
+ *
  * An AddThis-class.
  */
 
@@ -8,7 +11,6 @@ namespace Drupal\addthis;
 
 use Drupal\addthis\Util\AddThisJson;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\addthis\Services\AddThisScriptManager;
 
 class AddThis {
   const BLOCK_NAME = 'addthis_block';
@@ -76,21 +78,23 @@ class AddThis {
   private $config;
 
   /**
-   * Get the singleton instance of the AddThis class.
-   *
-   * @return AddThis
-   *   Instance of AddThis.
+   * @var \Drupal\addthis\AddThisScriptManager.
    */
-  public static function getInstance() {
+  protected $add_this_script_manager;
 
-    if (!isset(self::$instance)) {
-      $add_this = new AddThis();
-      $add_this->setJson(new AddThisJson());
-      $add_this->setConfig();
-      self::$instance = $add_this;
-    }
+  /**
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $config_factory;
 
-    return self::$instance;
+  /**
+   * @param \Drupal\addthis\AddThisScriptManager $addThisScriptManager
+   */
+  public function __construct(\Drupal\addthis\AddThisScriptManager $addThisScriptManager, \Drupal\Core\Config\ConfigFactory $configFactory){
+    $this->add_this_script_manager = $addThisScriptManager;
+    $this->config_factory = $configFactory;
+    $this->json = new AddThisJson();
+    $this->setConfig();
   }
 
   /**
@@ -101,7 +105,7 @@ class AddThis {
   }
 
   public function setConfig() {
-    $this->config = \Drupal::config('addthis.settings');
+    $this->config = $this->config_factory->get('addthis.settings');
   }
 
 
@@ -359,7 +363,7 @@ class AddThis {
     );
 
     // Add the widget script.
-    $script_manager = AddThisScriptManager::getInstance();
+    $script_manager = \Drupal::service('addthis.script_manager');
     $script_manager->attachJsToElement($element);
 
 
@@ -374,9 +378,9 @@ class AddThis {
       $items[$service] = array(
         '#type' => 'addthis_element',
         '#tag' => 'a',
-        '#value' => '',
+        'value' => '',
         '#attributes' => array(
-          'href' => AddThis::getInstance()->getBaseBookmarkUrl(),
+          'href' => $script_manager->getBaseBookmarkUrl(),
           'class' => array(
             'addthis_button_' . $service,
           ),
@@ -418,7 +422,7 @@ class AddThis {
         case 'tweet':
           $items[$service]['#attributes'] += array(
             'tw:count' => ($orientation ? 'horizontal' : 'vertical'),
-            'tw:via' => AddThis::getInstance()->getTwitterVia(),
+            'tw:via' => $script_manager->getTwitterVia(),
           );
           break;
         case 'bubble_style':
@@ -440,50 +444,4 @@ class AddThis {
 
     return render($element);
   }
-
-
-  /**
-   * Returns rendered markup for the BasicButton display. This will be called
-   * from both the Field and Block render functions.
-   * @param $settings
-   * @return null
-   */
-  function getBasicButtonMarkup($settings) {
-    $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
-    if (isset($settings['buttons_size']) && $settings['buttons_size'] == 'big') {
-      $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';
-    }
-    //$button_img = $addthis->transformToSecureUrl($button_img);
-
-    //$extra_css = isset($settings['extra_css']) ? $settings['extra_css'] : '';
-    $element = array(
-      '#type' => 'addthis_wrapper',
-      '#tag' => 'a',
-      '#attributes' => array(
-        'class' => array(
-          'addthis_button',
-        ),
-      ),
-    );
-    //$element['#attributes'] += $addthis->getAddThisAttributesMarkup($options);
-
-    // Add the widget script.
-    $script_manager = AddThisScriptManager::getInstance();
-    $script_manager->attachJsToElement($element);
-
-    // Create img button.
-    $image = array(
-      '#type' => 'addthis_element',
-      '#tag' => 'img',
-      '#attributes' => array(
-        'src' => $button_img,
-        'alt' => t('Share page with AddThis'),
-      ),
-    );
-    $element[] = $image;
-
-    return render($element);
-  }
-
-
 }

@@ -112,10 +112,13 @@ class AddThisSettingsForm extends ConfigFormBase {
       '#description_display' => 'before',
       '#open' => FALSE,
     );
+
+    $add_this_service = \Drupal::service('addthis.addthis');
+
     $form['details_compact_menu']['enabled_services_details']['addthis_enabled_services'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Enabled services'),
-      '#options' => AddThis::getInstance()->getServices(),
+      '#options' => $add_this_service->getServices(),
       '#default_value' => $config->get('compact_menu.enabled_services.addthis_enabled_services'),
       '#required' => FALSE,
       '#columns' => 3,
@@ -160,7 +163,7 @@ class AddThisSettingsForm extends ConfigFormBase {
     $form['details_excluded_services']['addthis_excluded_services'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Excluded services'),
-      '#options' => AddThis::getInstance()->getServices(),
+      '#options' => $add_this_service->getServices(),
       '#default_value' => $config->get('excluded_services.addthis_excluded_services'),
       '#required' => FALSE,
       '#columns' => 3,
