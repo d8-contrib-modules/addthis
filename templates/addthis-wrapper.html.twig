@@ -3,10 +3,10 @@
  * @file
  * Default theme implementation to display a node.
  * Available variables:
- * - element: AddThis Wrapper to be rendered
- * - element['']: Something else to render.
+ * - element: original AddThis wrapper object to reference
+ * - element['#markup']: Html markup to render for AddThis output
  *
  */
 #}
 
-{{ element.addthis_wrapper }}
+{{ element['#markup'] }}

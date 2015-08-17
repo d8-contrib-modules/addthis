@@ -2,9 +2,9 @@ addthis.admin:
   version: VERSION
   css:
     theme:
-      css/addthis.admin.css: {}
       http://cache.addthiscdn.com/icons/v1/sprites/services.css: { type: external }
-
+      css/addthis.admin.css: {}
+      
 addthis.global:
   version: VERSION
   js:
