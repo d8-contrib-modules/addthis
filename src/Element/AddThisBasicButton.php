@@ -45,19 +45,18 @@ class AddThisBasicButton extends RenderElement {
     ];
 
     // Add Script.
-    // TODO: Figure out what JS should be attached here.
-    $config_factory = \Drupal::getContainer()->get('config.factory');
-    $config = $config_factory->get('addthis.settings');
-    $adv_config = $config_factory->get('addthis.settings.advanced');
-
     $element['#attached']['library'][] = 'addthis/addthis.widget';
 
-    /**
-     * Every setting value passed here overrides previously set values but
-     * leaves the values that are already set somewhere else and that are not
-     * passed here.
-     */
-    $element['#attached']['drupalSettings']['addthis'] = [];
+    $script_manager = \Drupal::getContainer()->get('addthis.script_manager');
+
+    $addThisConfig = $script_manager->getAddThisConfig();
+    $addThisShareConfig = $script_manager->getAddThisShareConfig();
+
+    $element['#attached']['drupalSettings']['addThisWidget'] = [
+      'widgetScript' => 'http://example.dev/thing.js',
+      'config' => $addThisConfig,
+      'share' => $addThisShareConfig,
+    ];
 
     return $element;
   }

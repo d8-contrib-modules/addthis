@@ -22,10 +22,6 @@ use Drupal\addthis\Util\AddThisWidgetJsUrl;
 
 
 class AddThisScriptManager {
-
-  private $async = NULL;
-  private $domready = NULL;
-
   /**
    * @var \Drupal\Core\Language\LanguageManager
    */
@@ -45,125 +41,6 @@ class AddThisScriptManager {
   public function __construct(\Drupal\Core\Language\LanguageManager $languageManager, \Drupal\Core\Config\ConfigFactory $configFactory) {
     $this->language_manager = $languageManager;
     $this->config_factory = $configFactory;
-
-    // TODO: Remove these from here. They can be referenced when we use them.
-    $config = $this->config_factory->get('addthis.settings.advanced');
-    $this->async = $config->get('addthis_widget_load_async');
-    $this->domready = $config->get('addthis_widget_load_domready');
-  }
-
-  /**
-   * Get the current widget js url.
-   *
-   * @return string
-   *   A url reference to the widget js.
-   */
-  public function getWidgetJsUrl() {
-    // TODO: This uses a global function, why do we need to check the URL at this point?
-    return check_url($this->config_factory->get('addthis.settings.advanced')->get('addthis_widget_js_url'));
-  }
-
-  /**
-   * Return if we are on https connection.
-   *
-   * TODO: Why are we doing all of this URL processing?
-   * @return bool
-   *   TRUE if the current request is on https.
-   */
-  public function isHttps() {
-    global $is_https;
-
-    return $is_https;
-  }
-
-  /**
-   * Change the schema from http to https if we are on https.
-   *
-   * TODO: Why are we doing all of this URL processing?
-   * @param  string $url
-   *   A full url.
-   *
-   * @return string
-   *   The changed url.
-   */
-  public function correctSchemaIfHttps($url) {
-    if (is_string($url) && $this->isHttps()) {
-      return str_replace('http://', 'https://', $url);
-    }
-    else {
-      return $url;
-    }
-    throw new InvalidArgumentException('The argument was not a string value');
-  }
-
-  /**
-   * Attach the widget js to the element.
-   *
-   * @todo Change the scope of the addthis.js.
-   *   See if we can get the scope of the addthis.js into the header
-   *   just below the settings so that the settings can be used in the loaded
-   *   addthis.js of our module.
-   *
-   * @param array $element
-   *   The element to attach the JavaScript to.
-   */
-  public function attachJsToElement(&$element) {
-    $config = $this->config_factory->get('addthis.settings');
-    $adv_config = $this->config_factory->get('addthis.settings.advanced');
-    if ($adv_config->get('addthis_widget_js_include') !== 0) {
-      $widget_js = new AddThisWidgetJsUrl($adv_config->get('addthis_widget_js_url'));
-
-
-      $pubid = $config->get('analytics.addthis_profile_id');
-      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
-        $widget_js->addAttribute('pubid', $pubid);
-      }
-
-      $async = $this->async;
-      if ($async) {
-        $widget_js->addAttribute('async', 1);
-      }
-
-      if ($this->domready) {
-        $widget_js->addAttribute('domready', 1);
-      }
-      else {
-        // Only when the script is not loaded after the DOM is ready we include
-        // the script with #attached.
-        $element['#attached']['library'][] = 'addthis/addthis.widget';
-      }
-
-      // Every setting value passed here overrides previously set values but
-      // leaves the values that are already set somewhere else and that are not
-      // passed here.
-      $element['#attached']['drupalSettings']['addthis'] = array(
-        'async' => $async,
-        'domready' => $this->domready,
-        'widget_url' => $this->getWidgetJsUrl(),
-        'addthis_config' => $this->getJsAddThisConfig(),
-        'addthis_share' => $this->getJsAddThisShare(),
-      );
-    }
-  }
-
-  /**
-   * Enable / disable domready loading.
-   *
-   * @param bool $enabled
-   *   TRUE to enabled domready loading.
-   */
-  function setDomReady($enabled) {
-    $this->domready = $enabled;
-  }
-
-  /**
-   * Enable / disable async loading.
-   *
-   * @param bool $enabled
-   *   TRUE to enabled async loading.
-   */
-  function setAsync($enabled) {
-    $this->async = $enabled;
   }
 
   /**
@@ -176,13 +53,13 @@ class AddThisScriptManager {
    * @todo Make the adding of configuration dynamic.
    *   SRP is lost here.
    */
-  private function getJsAddThisConfig() {
+  public function getAddThisConfig() {
     $config = $this->config_factory->get('addthis.settings');
 
     $enabled_services = $this->getServiceNamesAsCommaSeparatedString($config->get('compact_menu.enabled_services.addthis_enabled_services')) . 'more';
     $excluded_services = $this->getServiceNamesAsCommaSeparatedString($config->get('excluded_services.addthis_excluded_services'));
 
-    $configuration = array(
+    $configuration = [
       'pubid' => $config->get('analytics.addthis_profile_id'),
       'services_compact' => $enabled_services,
       'services_exclude' => $excluded_services,
@@ -196,9 +73,8 @@ class AddThisScriptManager {
       'ui_open_windows' => $config->get('compact_menu.menu_style.addthis_open_windows_enabled'),
       'ui_use_css' => $config->get('compact_menu.additionals.addthis_standard_css_enabled'),
       'ui_use_addressbook' => $config->get('compact_menu.additionals.addthis_addressbook_enabled'),
-      // TODO: check that this returns what we want.
-      'ui_language' => $this->language_manager->getCurrentLanguage(),
-    );
+      'ui_language' => $this->language_manager->getCurrentLanguage()->getId(),
+    ];
     // TODO: Do we need to check if the module exists or can we just check the setting?
     if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
       if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
@@ -221,14 +97,14 @@ class AddThisScriptManager {
    * @todo Make the adding of configuration dynamic.
    *   SRP is lost here.
    */
-  private function getJsAddThisShare() {
+  public function getAddThisShareConfig() {
 
-    $configuration = $this->getJsAddThisConfig();
+    $configuration = $this->getAddThisConfig();
 
     if (isset($configuration['templates'])) {
-      $addthis_share = array(
+      $addthis_share = [
         'templates' => $configuration['templates'],
-      );
+      ];
     }
     $addthis_share['templates']['twitter'] = $this->config_factory->get('addthis.settings')
       ->get('third_party.addthis_twitter_template');
@@ -243,7 +119,7 @@ class AddThisScriptManager {
    * @param $services
    * @return string
    */
-  public function getServiceNamesAsCommaSeparatedString($services) {
+  protected function getServiceNamesAsCommaSeparatedString($services) {
     $serviceNames = array_values($services);
     $servicesAsCommaSeparatedString = '';
     foreach ($serviceNames as $serviceName) {
