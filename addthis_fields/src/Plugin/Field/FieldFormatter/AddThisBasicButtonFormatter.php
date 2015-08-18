@@ -41,7 +41,8 @@ class AddThisBasicButtonFormatter extends FormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $settings = $this->getSettings();
 
-    $element = AddThis::getInstance()->getBasicButtonForm($this, $settings);
+    $add_this_service = \Drupal::service('addthis.addthis');
+    $element = $add_this_service->getBasicButtonForm($this, $settings);
 
     return $element;
   }
@@ -52,7 +53,8 @@ class AddThisBasicButtonFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $settings = $this->getSettings();
-    $markup = AddThis::getInstance()->getBasicButtonMarkup($settings);
+    $add_this_service = \Drupal::service('addthis.addthis');
+    $markup = $add_this_service->getBasicButtonMarkup($settings);
     return array(
       '#markup' => $markup
     );

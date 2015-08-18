@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\addthis\Element\AddThisElement
+ * Contains \Drupal\addthis\Element\AddThisBasicToolbox
  */
 namespace Drupal\addthis\Element;
 
@@ -10,18 +10,18 @@ use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
 
 /**
- * Class AddThisElement
+ * Class AddThisBasicToolbox
  *
- * @RenderElement("addthis_element")
+ * @RenderElement("addthis_basic_toolbox")
  */
-class AddThisElement extends RenderElement {
+class AddThisBasicToolbox extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
     return [
-      '#theme' => 'addthis_element',
+      '#theme' => 'addthis_basic_toolbox',
     ];
   }
 

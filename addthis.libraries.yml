@@ -2,19 +2,15 @@ addthis.admin:
   version: VERSION
   css:
     theme:
-      http://cache.addthiscdn.com/icons/v1/sprites/services.css: { type: external }
+      http://cache.addthiscdn.com/icons/v1/sprites/services.css: {}
       css/addthis.admin.css: {}
-      
-addthis.global:
-  version: VERSION
-  js:
-    js/addthis.js: { scope: footer }
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
 
 addthis.widget:
   version: VERSION
   js:
-    http://s7.addthis.com/js/300/addthis_widget.js: { type: external, scope: footer }
+    'http://s7.addthis.com/js/300/addthis_widget.js': {type: external}
+    js/addthis.js: {}
+  dependencies:
+      - core/jquery
+      - core/drupal
+      - core/drupalSettings

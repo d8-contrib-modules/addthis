@@ -4,29 +4,21 @@
  * Implements hook_theme().
  */
 function addthis_theme() {
-  return array(
-    'addthis_wrapper' => array(
+  return [
+    'addthis_wrapper' => [
       'render element' => 'element',
-    ),
-    'addthis_element' => array(
+    ],
+    'addthis_element' => [
       'render element' => 'element',
-    ),
-  );
+    ],
+    'addthis_basic_button' => [
+      'render element' => 'element',
+    ],
+    'addthis_basic_toolbox' => [
+      'render element' => 'element',
+    ],
+  ];
 }
-
-/**
- * @TODO Find another way to do this since it breaks aggregation.
- * @param array $page
- */
-function addthis_page_attachments(array &$page) {
-  $page['#attached']['library'][] = 'addthis/addthis.global';
-}
-
-
-function addthis_library_info_alter() {
-
-}
-
 
 /**
  * Implementation to retrieve formatters for a given type of field.
