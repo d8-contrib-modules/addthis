@@ -21,7 +21,6 @@ class AddThisWrapper extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
     return array(
       '#theme' => 'addthis_wrapper',
     );

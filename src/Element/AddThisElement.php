@@ -20,10 +20,9 @@ class AddThisElement extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
     return [
       '#theme' => 'addthis_element',
-      '#attributes' => array(),
+      '#attributes' => [],
     ];
   }
 
