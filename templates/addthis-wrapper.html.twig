@@ -7,6 +7,9 @@
  *
  */
 #}
-<div>
-  {{ element }}
-</div>
+<{{ element['#tag'] }} {{ element['#attributes'] }}>
+    {% for service in element.services %}
+      {{ service }}
+    {% endfor %}
+</{{ element['#tag'] }}>
+

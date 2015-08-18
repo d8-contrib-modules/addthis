@@ -7,8 +7,6 @@
  *
  */
 #}
-<div>addthis element</div>
-{{ kint() }}
-<div>
+<{{ element['#tag'] }} {{ element['#attributes'] }}>
   {{ element }}
-</div>
+</{{ element['#tag'] }}>
