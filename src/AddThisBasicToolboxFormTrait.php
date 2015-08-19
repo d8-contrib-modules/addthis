@@ -8,6 +8,7 @@
 
 namespace Drupal\addthis;
 
+
 /**
  * Class AddThisBasicToolboxFormTrait
  * @package Drupal\addthis
@@ -47,8 +48,7 @@ trait AddThisBasicToolboxFormTrait {
       '#required' => TRUE,
       //Validate function is defined in addthis.module.
       '#element_validate' => [
-        $this,
-        'addThisDisplayElementServicesValidate'
+        get_class() . '::addThisDisplayElementServicesValidate'
       ],
       '#description' =>
         t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
@@ -89,7 +89,7 @@ trait AddThisBasicToolboxFormTrait {
 
   /**
    * @TODO Find out why this is never being called.
-   * 
+   *
    * Validation for services for BasicToolbox.
    * @param array $element
    * @param FormStateInterface $form_state
@@ -107,7 +107,7 @@ trait AddThisBasicToolboxFormTrait {
 
     // Return error.
     if ($bad) {
-      form_error($element, t('The declared services are incorrect or nonexistent.'));
+      $form_state->setErrorByName($element['name'], t('The declared services are incorrect or nonexistent.'));
     }
   }
 
