@@ -18,8 +18,6 @@
 
 namespace Drupal\addthis;
 
-use Drupal\addthis\Util\AddThisWidgetJsUrl;
-
 
 class AddThisScriptManager {
   /**
