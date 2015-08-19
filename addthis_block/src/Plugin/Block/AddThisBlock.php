@@ -6,9 +6,10 @@
 
 namespace Drupal\addthis_block\Plugin\Block;
 
+use Drupal\addthis\AddThisBasicButtonFormTrait;
+use Drupal\addthis\AddThisBasicToolboxFormTrait;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\addthis\AddThis;
 
 /**
  * Provides my custom block.
@@ -20,6 +21,9 @@ use Drupal\addthis\AddThis;
  * )
  */
 class AddThisBlock extends BlockBase {
+
+  use AddThisBasicButtonFormTrait;
+  use AddThisBasicToolboxFormTrait;
 
   /**
    * {@inheritdoc}
@@ -89,14 +93,12 @@ class AddThisBlock extends BlockBase {
       '#suffix' => '</div>',
     );
     if ($type == 'addthis_basic_toolbox') {
-      $basicToolbox = $add_this_service
-        ->getBasicToolboxForm($this, $settings['basic_toolbox']);
+      $basicToolbox = $this->addThisBasicToolboxForm($this, $settings['basic_toolbox']);
       $form['settings']['addthis_settings']['type_settings']['basic_toolbox'] = $basicToolbox;
     }
     else {
       if ($type == 'addthis_basic_button') {
-        $basicButton = $add_this_service
-          ->getBasicButtonForm($this, $settings['basic_button']);
+        $basicButton =  $this->addThisBasicButtonForm($this, $settings['basic_button']);
         $form['settings']['addthis_settings']['type_settings']['basic_button'] = $basicButton;
       }
     }
@@ -119,53 +121,40 @@ class AddThisBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
+
+    //@TODO Settings for unselected type get wiped because they dont exist in form.
+    // Try not to overwrite them if possible.
     $this->configuration['type'] = $form_state->getValue([
       'settings',
       'addthis_settings',
       'type'
     ]);
-    $this->configuration['basic_toolbox']['share_services'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'share_services'
-    ]);
-    $this->configuration['basic_toolbox']['buttons_size'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'buttons_size'
-    ]);
-    $this->configuration['basic_toolbox']['counter_orientation'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'counter_orientation'
-    ]);
-    $this->configuration['basic_toolbox']['extra_css'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'extra_css'
-    ]);
-    $this->configuration['basic_button']['button_size'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_button',
-      'button_size'
-    ]);
-    $this->configuration['basic_button']['extra_css'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_button',
-      'extra_css'
-    ]);
+
+    //Handle saving the partial elements provided by AddThisBasicToolboxFormTrait.
+    $basicToolboxKeys = $this->addThisBasicToolboxGetDefaults();
+    foreach($basicToolboxKeys as $key => $value) {
+      $this->configuration['basic_toolbox'][$key] = $form_state->getValue([
+        'settings',
+        'addthis_settings',
+        'type_settings',
+        'basic_toolbox',
+        $key
+      ]);
+    }
+
+    //Handle saving the partial elements provided by AddThisBasicButtonFormTrait.
+    $basicButtonKeys = $this->addThisBasicButtonGetDefaults();
+    foreach($basicButtonKeys as $key => $value) {
+      $this->configuration['basic_button'][$key] = $form_state->getValue([
+        'settings',
+        'addthis_settings',
+        'type_settings',
+        'basic_button',
+        $key
+      ]);
+    }
+
+
 
   }
 

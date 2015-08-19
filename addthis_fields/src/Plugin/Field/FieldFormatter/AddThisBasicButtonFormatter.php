@@ -6,6 +6,7 @@
 
 namespace Drupal\addthis_fields\Plugin\Field\FieldFormatter;
 
+use Drupal\addthis\AddThisBasicButtonFormTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,6 +26,7 @@ use Drupal\addthis\AddThis;
  */
 class AddThisBasicButtonFormatter extends FormatterBase {
 
+  use AddThisBasicButtonFormTrait;
   /**
    * {@inheritdoc}
    */
@@ -40,9 +42,7 @@ class AddThisBasicButtonFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $settings = $this->getSettings();
-
-    $add_this_service = \Drupal::service('addthis.addthis');
-    $element = $add_this_service->getBasicButtonForm($this, $settings);
+    $element = $this->addThisBasicButtonForm($this, $settings);
 
     return $element;
   }
