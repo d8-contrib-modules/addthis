@@ -34,7 +34,7 @@ trait AddThisBasicButtonFormTrait {
    *
    * @return array - Partial form to provide configuration.
    */
-  protected function addThisBasicButtonForm($parent_class, $options){
+  protected function addThisBasicButtonForm($options){
     $element = [];
 
     $element['button_size'] = [

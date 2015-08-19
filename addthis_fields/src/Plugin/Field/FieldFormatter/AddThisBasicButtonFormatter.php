@@ -42,7 +42,7 @@ class AddThisBasicButtonFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $settings = $this->getSettings();
-    $element = $this->addThisBasicButtonForm($this, $settings);
+    $element = $this->addThisBasicButtonForm($settings);
 
     return $element;
   }

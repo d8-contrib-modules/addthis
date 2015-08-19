@@ -43,7 +43,7 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $settings = $this->getSettings();
-    $element = $this->addThisBasicToolboxForm($this, $settings);
+    $element = $this->addThisBasicToolboxForm($settings);
 
     return $element;
   }

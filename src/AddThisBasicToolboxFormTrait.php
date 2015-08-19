@@ -36,7 +36,7 @@ trait AddThisBasicToolboxFormTrait {
    *
    * @return array - Partial form to provide configuration.
    */
-  protected function addThisBasicToolboxForm($parent_class, $options){
+  protected function addThisBasicToolboxForm($options){
     $element = [];
 
     $element['share_services'] = [
@@ -47,7 +47,7 @@ trait AddThisBasicToolboxFormTrait {
       '#required' => TRUE,
       //Validate function is defined in addthis.module.
       '#element_validate' => [
-        $parent_class,
+        $this,
         'addThisDisplayElementServicesValidate'
       ],
       '#description' =>
@@ -87,5 +87,28 @@ trait AddThisBasicToolboxFormTrait {
   }
 
 
+  /**
+   * @TODO Find out why this is never being called.
+   * 
+   * Validation for services for BasicToolbox.
+   * @param array $element
+   * @param FormStateInterface $form_state
+   */
+  public static function addThisDisplayElementServicesValidate($element, FormStateInterface $form_state) {
+    $bad = FALSE;
+
+    $services = trim($element['#value']);
+    $services = str_replace(' ', '', $services);
+
+    if (!preg_match('/^[a-z\_\,0-9]+$/', $services)) {
+      $bad = TRUE;
+    }
+    // @todo Validate the service names against AddThis.com. Give a notice when there are bad names.
+
+    // Return error.
+    if ($bad) {
+      form_error($element, t('The declared services are incorrect or nonexistent.'));
+    }
+  }
 
 }

@@ -31,16 +31,8 @@ class AddThisBlock extends BlockBase {
   public function defaultConfiguration() {
     return array(
       'type' => 'addthis_disabled',
-      'basic_toolbox' => array(
-        'share_services' => 'facebook,twitter',
-        'buttons_size' => 'addthis_16x16_style',
-        'counter_orientation' => 'horizontal',
-        'extra_css' => '',
-      ),
-      'basic_button' => array(
-        'buttons_size' => 'addthis_16x16_style',
-        'extra_css' => '',
-      ),
+      'basic_toolbox' => $this->addThisBasicToolboxGetDefaults(),
+      'basic_button' => $this->addThisBasicButtonGetDefaults(),
     );
   }
 
@@ -52,6 +44,8 @@ class AddThisBlock extends BlockBase {
     // The list of formatters.
     $add_this_service = \Drupal::service('addthis.addthis');
     $formatter_options = $add_this_service->getDisplayTypes();
+
+
     $settings = $this->getConfiguration();
 
     $type = $settings['type'];
@@ -93,12 +87,12 @@ class AddThisBlock extends BlockBase {
       '#suffix' => '</div>',
     );
     if ($type == 'addthis_basic_toolbox') {
-      $basicToolbox = $this->addThisBasicToolboxForm($this, $settings['basic_toolbox']);
+      $basicToolbox = $this->addThisBasicToolboxForm($settings['basic_toolbox']);
       $form['settings']['addthis_settings']['type_settings']['basic_toolbox'] = $basicToolbox;
     }
     else {
       if ($type == 'addthis_basic_button') {
-        $basicButton =  $this->addThisBasicButtonForm($this, $settings['basic_button']);
+        $basicButton =  $this->addThisBasicButtonForm($settings['basic_button']);
         $form['settings']['addthis_settings']['type_settings']['basic_button'] = $basicButton;
       }
     }
