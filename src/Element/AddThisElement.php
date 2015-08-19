@@ -22,7 +22,9 @@ class AddThisElement extends RenderElement {
   public function getInfo() {
     return [
       '#theme' => 'addthis_element',
+      '#attributes' => [],
     ];
   }
+
 
 }
