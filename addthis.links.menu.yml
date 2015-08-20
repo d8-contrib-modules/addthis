@@ -1,5 +1,12 @@
 addthis.settings:
-  title: AddThis
+  title: AddThis - Basic Settings
   description: 'Manage your site''s AddThis settings.'
   parent: system.admin_config_ui
   route_name: addthis.settings
+  weight: 1
+addthis.settings.advanced:
+  title: AddThis - Advanced Settings
+  description: 'Manage your site''s advanced AddThis settings.'
+  parent: system.admin_config_ui
+  route_name: addthis.settings.advanced
+  weight: 2
