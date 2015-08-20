@@ -35,25 +35,3 @@ function _addthis_field_info_formatter_field_type($field_type = NULL) {
 }
 
 
-/**
- * Validation for services for BasicToolbox.
- * @param array $element
- * @param FormStateInterface $form_state
- */
-function addThisDisplayElementServicesValidate(array $element, FormStateInterface $form_state) {
-  $bad = FALSE;
-
-  $services = trim($element['#value']);
-  $services = str_replace(' ', '', $services);
-
-  if (!preg_match('/^[a-z\_\,0-9]+$/', $services)) {
-    $bad = TRUE;
-  }
-  // @todo Validate the service names against AddThis.com. Give a notice when there are bad names.
-
-  // Return error.
-  if ($bad) {
-    form_error($element, t('The declared services are incorrect or nonexistent.'));
-  }
-}
-
