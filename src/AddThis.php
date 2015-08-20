@@ -246,13 +246,5 @@ class AddThis {
   }
 
 
-  public function getDisplayTypes() {
-    $displays = array();
-    foreach ($display_impl = _addthis_field_info_formatter_field_type() as $key => $display) {
-      $displays[$key] = t(SafeMarkup::checkPlain($display['label']));
-    }
-    return $displays;
-  }
-
 
 }

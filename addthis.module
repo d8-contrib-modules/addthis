@@ -20,18 +20,4 @@ function addthis_theme() {
   ];
 }
 
-/**
- * Implementation to retrieve formatters for a given type of field.
- */
-function _addthis_field_info_formatter_field_type($field_type = NULL) {
-  $formatters = \Drupal::Service('plugin.manager.field.formatter')
-    ->getDefinitions();
-  foreach ($formatters as $key => $formatter) {
-    if (!in_array((!isset($field_type) ? 'addthis' : $field_type), $formatter['field_types'])) {
-      unset($formatters[$key]);
-    }
-  }
-  return $formatters;
-}
-
 
