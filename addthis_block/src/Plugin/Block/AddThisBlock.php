@@ -40,12 +40,6 @@ class AddThisBlock extends BlockBase {
    * {@inheritdoc}
    */
   function blockForm($form, FormStateInterface $form_state) {
-
-    // The list of formatters.
-    $add_this_service = \Drupal::service('addthis.addthis');
-    $formatter_options = $add_this_service->getDisplayTypes();
-
-
     $settings = $this->getConfiguration();
 
     $type = $settings['type'];
@@ -74,7 +68,10 @@ class AddThisBlock extends BlockBase {
       '#type' => 'select',
       '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
       '#title_display' => 'invisible',
-      '#options' => $formatter_options,
+      '#options' => [
+        'addthis_basic_button',
+        'addthis_basic_toolbox'
+      ],
       '#default_value' => $settings['type'],
       '#attributes' => array('class' => array('addthis-display-type')),
       '#ajax' => array(
