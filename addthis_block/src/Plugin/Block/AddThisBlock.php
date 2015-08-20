@@ -6,9 +6,10 @@
 
 namespace Drupal\addthis_block\Plugin\Block;
 
+use Drupal\addthis\AddThisBasicButtonFormTrait;
+use Drupal\addthis\AddThisBasicToolboxFormTrait;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\addthis\AddThis;
 
 /**
  * Provides my custom block.
@@ -21,22 +22,17 @@ use Drupal\addthis\AddThis;
  */
 class AddThisBlock extends BlockBase {
 
+  use AddThisBasicButtonFormTrait;
+  use AddThisBasicToolboxFormTrait;
+
   /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return array(
       'type' => 'addthis_disabled',
-      'basic_toolbox' => array(
-        'share_services' => 'facebook,twitter',
-        'buttons_size' => 'addthis_16x16_style',
-        'counter_orientation' => 'horizontal',
-        'extra_css' => '',
-      ),
-      'basic_button' => array(
-        'buttons_size' => 'addthis_16x16_style',
-        'extra_css' => '',
-      ),
+      'basic_toolbox' => $this->addThisBasicToolboxGetDefaults(),
+      'basic_button' => $this->addThisBasicButtonGetDefaults(),
     );
   }
 
@@ -44,9 +40,6 @@ class AddThisBlock extends BlockBase {
    * {@inheritdoc}
    */
   function blockForm($form, FormStateInterface $form_state) {
-
-    // The list of formatters.
-    $formatter_options = AddThis::getInstance()->getDisplayTypes();
     $settings = $this->getConfiguration();
 
     $type = $settings['type'];
@@ -75,7 +68,10 @@ class AddThisBlock extends BlockBase {
       '#type' => 'select',
       '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
       '#title_display' => 'invisible',
-      '#options' => $formatter_options,
+      '#options' => [
+        'addthis_basic_button',
+        'addthis_basic_toolbox'
+      ],
       '#default_value' => $settings['type'],
       '#attributes' => array('class' => array('addthis-display-type')),
       '#ajax' => array(
@@ -88,14 +84,12 @@ class AddThisBlock extends BlockBase {
       '#suffix' => '</div>',
     );
     if ($type == 'addthis_basic_toolbox') {
-      $basicToolbox = AddThis::getInstance()
-        ->getBasicToolboxForm($this, $settings['basic_toolbox']);
+      $basicToolbox = $this->addThisBasicToolboxForm($settings['basic_toolbox']);
       $form['settings']['addthis_settings']['type_settings']['basic_toolbox'] = $basicToolbox;
     }
     else {
       if ($type == 'addthis_basic_button') {
-        $basicButton = AddThis::getInstance()
-          ->getBasicButtonForm($this, $settings['basic_button']);
+        $basicButton =  $this->addThisBasicButtonForm($settings['basic_button']);
         $form['settings']['addthis_settings']['type_settings']['basic_button'] = $basicButton;
       }
     }
@@ -118,53 +112,40 @@ class AddThisBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
+
+    //@TODO Settings for unselected type get wiped because they dont exist in form.
+    // Try not to overwrite them if possible.
     $this->configuration['type'] = $form_state->getValue([
       'settings',
       'addthis_settings',
       'type'
     ]);
-    $this->configuration['basic_toolbox']['share_services'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'share_services'
-    ]);
-    $this->configuration['basic_toolbox']['buttons_size'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'buttons_size'
-    ]);
-    $this->configuration['basic_toolbox']['counter_orientation'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'counter_orientation'
-    ]);
-    $this->configuration['basic_toolbox']['extra_css'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_toolbox',
-      'extra_css'
-    ]);
-    $this->configuration['basic_button']['button_size'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_button',
-      'button_size'
-    ]);
-    $this->configuration['basic_button']['extra_css'] = $form_state->getValue([
-      'settings',
-      'addthis_settings',
-      'type_settings',
-      'basic_button',
-      'extra_css'
-    ]);
+
+    //Handle saving the partial elements provided by AddThisBasicToolboxFormTrait.
+    $basicToolboxKeys = $this->addThisBasicToolboxGetDefaults();
+    foreach($basicToolboxKeys as $key => $value) {
+      $this->configuration['basic_toolbox'][$key] = $form_state->getValue([
+        'settings',
+        'addthis_settings',
+        'type_settings',
+        'basic_toolbox',
+        $key
+      ]);
+    }
+
+    //Handle saving the partial elements provided by AddThisBasicButtonFormTrait.
+    $basicButtonKeys = $this->addThisBasicButtonGetDefaults();
+    foreach($basicButtonKeys as $key => $value) {
+      $this->configuration['basic_button'][$key] = $form_state->getValue([
+        'settings',
+        'addthis_settings',
+        'type_settings',
+        'basic_button',
+        $key
+      ]);
+    }
+
+
 
   }
 
@@ -173,27 +154,25 @@ class AddThisBlock extends BlockBase {
    */
   public function build() {
     $config = $this->configuration;
+
     switch ($config['type']) {
       case 'addthis_basic_button':
-        $markup = AddThis::getInstance()
-          ->getBasicButtonMarkup($config['basic_button']);
+        return [
+          '#type' => 'addthis_basic_button',
+          '#size' => $config['basic_button']['button_size'],
+        ];
         break;
       case 'addthis_basic_toolbox':
-        $markup = AddThis::getInstance()
-          ->getBasicToolboxMarkup($config['basic_toolbox']);
-        break;
-      default:
-        $markup = '';
+        return [
+          '#type' => 'addthis_basic_toolbox',
+          '#size' => $config['basic_toolbox']['buttons_size'],
+          '#services' => $config['basic_toolbox']['share_services'],
+        ];
         break;
     }
 
-    return array(
-      '#markup' => $markup
-    );
-
+    return [
+      '#markup' => ''
+    ];
   }
-
-
 }
-
-?>

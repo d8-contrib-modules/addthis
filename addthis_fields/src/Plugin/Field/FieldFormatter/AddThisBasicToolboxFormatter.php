@@ -6,6 +6,7 @@
 
 namespace Drupal\addthis_fields\Plugin\Field\FieldFormatter;
 
+use Drupal\addthis\AddThisBasicToolboxFormTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -24,6 +25,7 @@ use Drupal\addthis\AddThis;
  */
 class AddThisBasicToolboxFormatter extends FormatterBase {
 
+  use AddThisBasicToolboxFormTrait;
   /**
    * {@inheritdoc}
    */
@@ -40,11 +42,8 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-
     $settings = $this->getSettings();
-    $element = array();
-
-    AddThis::getInstance()->getBasicToolboxForm($this, $settings);
+    $element = $this->addThisBasicToolboxForm($settings);
 
     return $element;
   }
@@ -56,7 +55,8 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
   public function viewElements(FieldItemListInterface $items) {
     $settings = $this->getSettings();
 
-    $markup = AddThis::getInstance()->getBasicToolboxMarkup($settings);
+    $add_this_service = \Drupal::service('addthis.addthis');
+    $markup = $add_this_service->getBasicToolboxMarkup($settings);
 
     return array(
       '#markup' => $markup
