@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\addthis_fields\Plugin\Field\FieldFormatter\AddThisBasicButtonFormatter.
+ * Contains \Drupal\addthis\Plugin\Field\FieldFormatter\AddThisBasicButtonFormatter.
  */
 
-namespace Drupal\addthis_fields\Plugin\Field\FieldFormatter;
+namespace Drupal\addthis\Plugin\Field\FieldFormatter;
 
 use Drupal\addthis\AddThisBasicButtonFormTrait;
 use Drupal\Core\Field\FormatterBase;
@@ -53,10 +53,10 @@ class AddThisBasicButtonFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $settings = $this->getSettings();
-    $add_this_service = \Drupal::service('addthis.addthis');
-    $markup = $add_this_service->getBasicButtonMarkup($settings);
     return array(
-      '#markup' => $markup
+      '#type' => 'addthis_basic_button',
+      '#size' => $settings['basic_button']['button_size'],
+      '#extra_classes' => $settings['basic_button']['extra_css'],
     );
   }
 
