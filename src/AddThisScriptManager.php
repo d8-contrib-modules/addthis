@@ -142,37 +142,52 @@ class AddThisScriptManager {
      */
     public function attachJsToElement(&$element) {
 
-      $addthis_url_configs = array();
+
       $config = $this->config_factory->get('addthis.settings');
       $adv_config = $this->config_factory->get('addthis.settings.advanced');
 
-      if ($adv_config->get('addthis_widget_js_include') !== 0) {
+      $menu_style = $config->get('compact_menu.menu_style');
 
-        $widget_js_url = $adv_config->get('addthis_widget_js_url');
-        $pubid = $config->get('analytics.addthis_profile_id');
+      $addthis_settings = array();
 
-        if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
+      foreach($menu_style as $key => $val){
+        $c_key = str_replace('addthis_', '', $key);
+        $addthis_settings['menu_style'][$c_key] = $val;
+      }
+
+      // TODO: other section under main settings
+
+      // $pubid = $config->get('analytics.addthis_profile_id');
+
+      /*
+      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
           //$widget_js->addAttribute('pubid', $pubid);
         }
-        $async = $this->async;
-        if ($async) {
-          //$widget_js->addAttribute('async', 1);
-        }
-        if ($this->domready) {
-          //$widget_js->addAttribute('domready', 1);
-        }
-      }
+      */
 
-      if(!isset($widget_js_url)) {
-        $widget_js_url = 'http://s7.addthis.com/js/250/addthis_widget.js';
-      }
+     /*
+      *  AddThis Advanced Settings
+      */
+      $addthis_adv_settings = array();
+      $addthis_adv_settings['bookmark_url'] = $adv_config->get('addthis_bookmark_url');
+      $addthis_adv_settings['services_css_url'] = $adv_config->get('addthis_services_css_url');
+      $addthis_adv_settings['services_json_url'] = $adv_config->get('addthis_services_json_url');
+      $addthis_adv_settings['widget_js_url'] = $adv_config->get('addthis_widget_js_url');
+      $addthis_adv_settings['conf_code_enabled'] = $adv_config->get('addthis_custom_configuration_code_enabled');
+      $addthis_adv_settings['conf_code'] = $adv_config->get('addthis_custom_configuration_code');
+      $addthis_adv_settings['load_domready'] = $adv_config->get('addthis_widget_load_domready');
+      $addthis_adv_settings['load_async'] = $adv_config->get('addthis_widget_load_async');
+      $addthis_adv_settings['widget_include'] = $adv_config->get('addthis_widget_include');
+      $addthis_adv_settings['css_url_key'] = $adv_config->get('addthis_services_css_url_key');
+      $addthis_adv_settings['json_url_key'] = $adv_config->get('addthis_services_json_url_key');
+
 
       $element['#attached']['library'][] = 'addthis/addthis.widget';
       $addThisConfig = $this->getAddThisConfig();
       $addThisShareConfig = $this->getAddThisShareConfig();
 
       $element['#attached']['drupalSettings']['addThisWidget'] = [
-        'widgetScript' => $widget_js_url,
+        'widgetScript' => $addthis_adv_settings['widget_js_url'],
         'config' => $addThisConfig,
         'share' => $addThisShareConfig,
       ];
