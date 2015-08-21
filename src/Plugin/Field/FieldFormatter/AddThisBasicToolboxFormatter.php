@@ -53,12 +53,12 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
-
+    $settings = $this->getSettings();
     return array(
       '#type' => 'addthis_basic_toolbox',
-      '#size' => $config['basic_toolbox']['buttons_size'],
-      '#services' => $config['basic_toolbox']['share_services'],
-      '#extra_classes' => $config['basic_toolbox']['extra_css'],
+      '#size' => $settings['basic_toolbox']['buttons_size'],
+      '#services' => $settings['basic_toolbox']['share_services'],
+      '#extra_classes' => $settings['basic_toolbox']['extra_css'],
     );
   }
 

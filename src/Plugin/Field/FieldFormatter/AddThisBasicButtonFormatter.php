@@ -52,11 +52,11 @@ class AddThisBasicButtonFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
-
+    $settings = $this->getSettings();
     return array(
       '#type' => 'addthis_basic_button',
-      '#size' => $config['basic_button']['button_size'],
-      '#extra_classes' => $config['basic_button']['extra_css'],
+      '#size' => $settings['basic_button']['button_size'],
+      '#extra_classes' => $settings['basic_button']['extra_css'],
     );
   }
 
