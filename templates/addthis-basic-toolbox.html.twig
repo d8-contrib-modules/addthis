@@ -9,18 +9,7 @@
 #}
 
 <div class="addthis_toolbox addthis_default_style {{ element['#extra_classes'] }} {{ element['#size'] }} ">
-{#{{ element }}#}
     {% for service in element.services %}
         <a class="addthis_button_{{ service }}" href="#" ></a>
     {% endfor %}
 </div>
-
-
-{## print all variables#}
-{#{{ dump(_context) }}#}
-{## print only keys#}
-{#{{ dump(_context|keys) }}#}
-{## foreach loop for myarray#}
-{#{% for service in element.services %}#}
-{#<a class="addthis_button_{{ service }}" href="#" ></a>#}
-{#{% endfor %}#}
