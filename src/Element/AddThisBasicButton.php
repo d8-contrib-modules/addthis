@@ -44,19 +44,9 @@ class AddThisBasicButton extends RenderElement {
       '#alt' => t('Share page with AddThis'),
     ];
 
-    // Add Script.
-    $element['#attached']['library'][] = 'addthis/addthis.widget';
 
     $script_manager = \Drupal::getContainer()->get('addthis.script_manager');
-
-    $addThisConfig = $script_manager->getAddThisConfig();
-    $addThisShareConfig = $script_manager->getAddThisShareConfig();
-
-    $element['#attached']['drupalSettings']['addThisWidget'] = [
-      'widgetScript' => 'http://example.dev/thing.js',
-      'config' => $addThisConfig,
-      'share' => $addThisShareConfig,
-    ];
+    $script_manager->attachJsToElement($element);
 
     return $element;
   }

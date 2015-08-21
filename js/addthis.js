@@ -1,24 +1,42 @@
 // AddThis requires a global variable. :(
-var addthis_config;
-var addthis_share;
+var addthis_config,
+  addthis_share;
 
-(function ($) {
+(function ($, Drupal, window, document, undefined) {
   Drupal.behaviors.addThisWidget = {
     attach: function (context, settings) {
-      // Because we cannot dynamically add JS, we do it here. :(
-      $('body').once('LoadAddThisWidget').each(function () {
-        //if (typeof settings.addThisWidget.widgetScript !== 'undefined') {
-        //  $.getScript(settings.addThisWidget.widgetScript);
-        //}
+      if (context === document) { // only fires on document load
 
-        if (typeof settings.addThisWidget.config !== 'undefined') {
-          addthis_config = settings.addThisWidget.config;
+               console.log(settings.addThisWidget);
+
+        console.log('loaded ');
+
+        // Because we cannot dynamically add JS, we do it here. :(
+        if (typeof settings.addThisWidget.widgetScript !== 'undefined') {
+          $.getScript(settings.addThisWidget.widgetScript)
+            .done(function (script, textStatus) {
+
+              // console.log(settings.addThisWidget.widgetScript);
+
+              console.log('Success');
+
+            }).fail(function (jqxhr, settings, exception) {
+
+              // TODO: check for fail msg
+              console.log('Fail');
+
+            });
         }
 
-        if (typeof settings.addThisWidget.share !== 'undefined') {
-          addthis_share = settings.addThisWidget.share;
-        }
-      });
+        /*
+         console.log(addthis_share);
+         console.log('- - - - - - - - - - - - ');
+         console.log(settings.addThisWidget);
+         console.log('- - - - - - - - - - - - ');
+         */
+
+      }
     }
   };
-})(jQuery);
+
+})(jQuery, Drupal, this, this.document);
