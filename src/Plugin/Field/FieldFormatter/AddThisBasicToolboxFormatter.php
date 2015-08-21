@@ -56,9 +56,9 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
     $settings = $this->getSettings();
     return array(
       '#type' => 'addthis_basic_toolbox',
-      '#size' => $settings['basic_toolbox']['buttons_size'],
-      '#services' => $settings['basic_toolbox']['share_services'],
-      '#extra_classes' => $settings['basic_toolbox']['extra_css'],
+      '#size' => $settings['buttons_size'],
+      '#services' => $settings['share_services'],
+      '#extra_classes' => $settings['extra_css'],
     );
   }
 
