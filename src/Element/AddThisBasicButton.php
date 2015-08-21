@@ -25,6 +25,7 @@ class AddThisBasicButton extends RenderElement {
     return [
       '#theme' => 'addthis_basic_button',
       '#size' => $config['basic_button']['button_size'],
+      '#extra_classes' => $config['basic_button']['extra_css'],
       '#pre_render' => [
         [$class, 'preRender'],
       ],

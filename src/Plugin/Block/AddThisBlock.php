@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\addthis_block\Plugin\Block\AddThisBlock.
+ * Contains \Drupal\addthis\Plugin\Block\AddThisBlock.
  */
 
-namespace Drupal\addthis_block\Plugin\Block;
+namespace Drupal\addthis\Plugin\Block;
 
 use Drupal\addthis\AddThisBasicButtonFormTrait;
 use Drupal\addthis\AddThisBasicToolboxFormTrait;
@@ -69,8 +69,8 @@ class AddThisBlock extends BlockBase {
       '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
       '#title_display' => 'invisible',
       '#options' => [
-        'addthis_basic_button',
-        'addthis_basic_toolbox'
+        'addthis_basic_button' => 'AddThis Basic Button',
+        'addthis_basic_toolbox' => 'AddThis Basic Toolbox',
       ],
       '#default_value' => $settings['type'],
       '#attributes' => array('class' => array('addthis-display-type')),
@@ -160,6 +160,7 @@ class AddThisBlock extends BlockBase {
         return [
           '#type' => 'addthis_basic_button',
           '#size' => $config['basic_button']['button_size'],
+          '#extra_classes' => $config['basic_button']['extra_css'],
         ];
         break;
       case 'addthis_basic_toolbox':
@@ -167,6 +168,7 @@ class AddThisBlock extends BlockBase {
           '#type' => 'addthis_basic_toolbox',
           '#size' => $config['basic_toolbox']['buttons_size'],
           '#services' => $config['basic_toolbox']['share_services'],
+          '#extra_classes' => $config['basic_toolbox']['extra_css'],
         ];
         break;
     }
