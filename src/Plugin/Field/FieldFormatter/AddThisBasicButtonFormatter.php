@@ -55,10 +55,8 @@ class AddThisBasicButtonFormatter extends FormatterBase {
     $settings = $this->getSettings();
     return array(
       '#type' => 'addthis_basic_button',
-      '#size' => $settings['basic_button']['button_size'],
-      '#extra_classes' => $settings['basic_button']['extra_css'],
+      '#size' => $settings['button_size'],
+      '#extra_classes' => $settings['extra_css'],
     );
   }
-
-
 }
