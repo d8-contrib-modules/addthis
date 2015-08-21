@@ -21,10 +21,11 @@ class AddThisBasicToolbox extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
+    $config = $this->configuration;
     return [
       '#theme' => 'addthis_basic_toolbox',
-      '#size' => '',
-      '#services' => array(),
+      '#size' => $config['basic_toolbox']['buttons_size'],
+      '#services' => $config['basic_toolbox']['share_services'],
       '#pre_render' => [
         [$class, 'preRender'],
       ],
