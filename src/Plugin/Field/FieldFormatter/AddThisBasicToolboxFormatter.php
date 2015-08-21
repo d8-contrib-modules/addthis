@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\addthis_fields\Plugin\Field\FieldFormatter\AddThisBasicToolboxFormatter.
+ * Contains \Drupal\addthis\Plugin\Field\FieldFormatter\AddThisBasicToolboxFormatter.
  */
 
-namespace Drupal\addthis_fields\Plugin\Field\FieldFormatter;
+namespace Drupal\addthis\Plugin\Field\FieldFormatter;
 
 use Drupal\addthis\AddThisBasicToolboxFormTrait;
 use Drupal\Core\Field\FormatterBase;
@@ -54,12 +54,11 @@ class AddThisBasicToolboxFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items) {
     $settings = $this->getSettings();
-
-    $add_this_service = \Drupal::service('addthis.addthis');
-    $markup = $add_this_service->getBasicToolboxMarkup($settings);
-
     return array(
-      '#markup' => $markup
+      '#type' => 'addthis_basic_toolbox',
+      '#size' => $settings['basic_toolbox']['buttons_size'],
+      '#services' => $settings['basic_toolbox']['share_services'],
+      '#extra_classes' => $settings['basic_toolbox']['extra_css'],
     );
   }
 
