@@ -12,20 +12,10 @@ var addthis_config,
         if (typeof settings.addThisWidget.widgetScript !== 'undefined') {
           $.getScript(settings.addThisWidget.widgetScript)
             .done(function (script, textStatus) {
-              // console.log(settings.addThisWidget.widgetScript);
-              // console.log('Success');
             }).fail(function (jqxhr, settings, exception) {
               // TODO: check for fail msg
-              // console.log('Fail');
             });
         }
-
-        /*
-         console.log(addthis_share);
-         console.log('- - - - - - - - - - - - ');
-         console.log(settings.addThisWidget);
-         console.log('- - - - - - - - - - - - ');
-         */
 
       }
     }
