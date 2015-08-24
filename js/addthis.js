@@ -1,24 +1,24 @@
-// AddThis requires a global variable. :(
-var addthis_config;
-var addthis_share;
+// AddThis requires a global variable
 
-(function ($) {
+var addthis_config,
+  addthis_share;
+
+(function ($, Drupal, window, document, undefined) {
   Drupal.behaviors.addThisWidget = {
     attach: function (context, settings) {
-      // Because we cannot dynamically add JS, we do it here. :(
-      $('body').once('LoadAddThisWidget').each(function () {
-        //if (typeof settings.addThisWidget.widgetScript !== 'undefined') {
-        //  $.getScript(settings.addThisWidget.widgetScript);
-        //}
+      if (context === document) { // only fires on document load
 
-        if (typeof settings.addThisWidget.config !== 'undefined') {
-          addthis_config = settings.addThisWidget.config;
+        // Because we cannot dynamically add JS
+        if (typeof settings.addThisWidget.widgetScript !== 'undefined') {
+          $.getScript(settings.addThisWidget.widgetScript)
+            .done(function (script, textStatus) {
+            }).fail(function (jqxhr, settings, exception) {
+              // TODO: check for fail msg
+            });
         }
 
-        if (typeof settings.addThisWidget.share !== 'undefined') {
-          addthis_share = settings.addThisWidget.share;
-        }
-      });
+      }
     }
   };
-})(jQuery);
+
+})(jQuery, Drupal, this, this.document);

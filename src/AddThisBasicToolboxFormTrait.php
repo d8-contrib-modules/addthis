@@ -94,7 +94,7 @@ trait AddThisBasicToolboxFormTrait {
    * @param array $element
    * @param FormStateInterface $form_state
    */
-  public static function addThisDisplayElementServicesValidate($element, FormStateInterface $form_state) {
+  public static function addThisDisplayElementServicesValidate($element, $form_state) {
     $bad = FALSE;
 
     $services = trim($element['#value']);

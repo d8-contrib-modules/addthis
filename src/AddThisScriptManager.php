@@ -128,4 +128,75 @@ class AddThisScriptManager {
     return $servicesAsCommaSeparatedString;
   }
 
+
+  /**
+     * Attach the widget js to the element.
+     *
+     * @todo Change the scope of the addthis.js.
+     *   See if we can get the scope of the addthis.js into the header
+     *   just below the settings so that the settings can be used in the loaded
+     *   addthis.js of our module.
+     *
+     * @param array $element
+     *   The element to attach the JavaScript to.
+     */
+    public function attachJsToElement(&$element) {
+
+
+      $config = $this->config_factory->get('addthis.settings');
+      $adv_config = $this->config_factory->get('addthis.settings.advanced');
+
+      $menu_style = $config->get('compact_menu.menu_style');
+
+      $addthis_settings = array();
+
+      foreach($menu_style as $key => $val){
+        $c_key = str_replace('addthis_', '', $key);
+        $addthis_settings['menu_style'][$c_key] = $val;
+      }
+
+      // TODO: other section under main settings
+
+      // $pubid = $config->get('analytics.addthis_profile_id');
+
+      /*
+      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
+          //$widget_js->addAttribute('pubid', $pubid);
+        }
+      */
+
+     /*
+      *  AddThis Advanced Settings
+      */
+      $addthis_adv_settings = array();
+      $addthis_adv_settings['bookmark_url'] = $adv_config->get('addthis_bookmark_url');
+      $addthis_adv_settings['services_css_url'] = $adv_config->get('addthis_services_css_url');
+      $addthis_adv_settings['services_json_url'] = $adv_config->get('addthis_services_json_url');
+      $addthis_adv_settings['widget_js_url'] = $adv_config->get('addthis_widget_js_url');
+      $addthis_adv_settings['conf_code_enabled'] = $adv_config->get('addthis_custom_configuration_code_enabled');
+      $addthis_adv_settings['conf_code'] = $adv_config->get('addthis_custom_configuration_code');
+      $addthis_adv_settings['load_domready'] = $adv_config->get('addthis_widget_load_domready');
+      $addthis_adv_settings['load_async'] = $adv_config->get('addthis_widget_load_async');
+      $addthis_adv_settings['widget_include'] = $adv_config->get('addthis_widget_include');
+      $addthis_adv_settings['css_url_key'] = $adv_config->get('addthis_services_css_url_key');
+      $addthis_adv_settings['json_url_key'] = $adv_config->get('addthis_services_json_url_key');
+
+
+      $element['#attached']['library'][] = 'addthis/addthis.widget';
+      $addThisConfig = $this->getAddThisConfig();
+      $addThisShareConfig = $this->getAddThisShareConfig();
+
+      $element['#attached']['drupalSettings']['addThisWidget'] = [
+        'widgetScript' => $addthis_adv_settings['widget_js_url'],
+        'config' => $addThisConfig,
+        'share' => $addThisShareConfig,
+      ];
+
+
+    }
+
+
 }
+
+
+
