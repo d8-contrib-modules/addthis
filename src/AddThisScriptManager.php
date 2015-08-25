@@ -19,6 +19,8 @@
 namespace Drupal\addthis;
 
 
+use Drupal\Core\Url;
+
 class AddThisScriptManager {
   /**
    * @var \Drupal\Core\Language\LanguageManager
@@ -42,9 +44,11 @@ class AddThisScriptManager {
   }
 
   /**
-   * Get a array with all addthis_config values.
+   * Set values for addthis_config based on Sharing API documentation. See
+   * http://support.addthis.com/customer/portal/articles/1337994-the-addthis_config-variable
+   * for more details.
    *
-   * Allow alter through 'addthis_configuration'.
+   * @TODO Allow alter of 'addthis_configuration'.
    *
    * @todo Add static cache.
    *
@@ -58,10 +62,9 @@ class AddThisScriptManager {
     $excluded_services = $this->getServiceNamesAsCommaSeparatedString($config->get('excluded_services.addthis_excluded_services'));
 
     $configuration = [
-      'pubid' => $config->get('analytics.addthis_profile_id'),
       'services_compact' => $enabled_services,
       'services_exclude' => $excluded_services,
-      'data_track_clickback' => $config->get('analytics.addthis_clickback_tracking_enabled'),
+      //'services_expanded' => @todo - add this
       'ui_508_compliant' => $config->get('compact_menu.additionals.addthis_508_compliant'),
       'ui_click' => $config->get('compact_menu.menu_style.addthis_click_to_open_compact_menu_enabled'),
       'ui_cobrand' => $config->get('compact_menu.menu_style.addthis_co_brand'),
@@ -72,23 +75,28 @@ class AddThisScriptManager {
       'ui_use_css' => $config->get('compact_menu.additionals.addthis_standard_css_enabled'),
       'ui_use_addressbook' => $config->get('compact_menu.additionals.addthis_addressbook_enabled'),
       'ui_language' => $this->language_manager->getCurrentLanguage()->getId(),
+      'pubid' => $config->get('analytics.addthis_profile_id'),
+      'data_track_clickback' => $config->get('analytics.addthis_clickback_tracking_enabled'),
+
     ];
-    // TODO: Do we need to check if the module exists or can we just check the setting?
+
+    //Ensure that the Google Analytics module is enabled for tracking.
     if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
       if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
-        $configuration['data_ga_property'] = $this->config_factory->get('google_analytics.settings')->get('google_analytics_account');
+        $configuration['data_ga_property'] = $this->config_factory->get('google_analytics.settings')
+          ->get('google_analytics_account');
         $configuration['data_ga_social'] = $config->get('analytics.addthis_google_analytics_social_tracking_enabled');
       }
     }
 
-    // drupal_alter('addthis_configuration', $configuration);
     return $configuration;
   }
 
   /**
-   * Get a array with all addthis_share values.
+   * Get a array with all addthis_share values that we set. More documentation can
+   * be found here: http://support.addthis.com/customer/portal/articles/1337996-the-addthis_share-variable
    *
-   * Allow alter through 'addthis_configuration_share'.
+   * @TODO Allow alter of 'addthis_configuration_share'.
    *
    * @todo Add static cache.
    *
@@ -96,18 +104,10 @@ class AddThisScriptManager {
    *   SRP is lost here.
    */
   public function getAddThisShareConfig() {
+    $config = $this->config_factory->get('addthis.settings');
 
-    $configuration = $this->getAddThisConfig();
+    $addthis_share['templates']['twitter'] = $config->get('third_party.addthis_twitter_template');
 
-    if (isset($configuration['templates'])) {
-      $addthis_share = [
-        'templates' => $configuration['templates'],
-      ];
-    }
-    $addthis_share['templates']['twitter'] = $this->config_factory->get('addthis.settings')
-      ->get('third_party.addthis_twitter_template');
-
-    //drupal_alter('addthis_configuration_share', $configuration);
     return $addthis_share;
   }
 
@@ -130,70 +130,61 @@ class AddThisScriptManager {
 
 
   /**
-     * Attach the widget js to the element.
-     *
-     * @todo Change the scope of the addthis.js.
-     *   See if we can get the scope of the addthis.js into the header
-     *   just below the settings so that the settings can be used in the loaded
-     *   addthis.js of our module.
-     *
-     * @param array $element
-     *   The element to attach the JavaScript to.
-     */
-    public function attachJsToElement(&$element) {
+   * Attach the widget js to the element.
+   *
+   * @todo Change the scope of the addthis.js.
+   *   See if we can get the scope of the addthis.js into the header
+   *   just below the settings so that the settings can be used in the loaded
+   *   addthis.js of our module.
+   *
+   * @param array $element
+   *   The element to attach the JavaScript to.
+   */
+  public function attachJsToElement(&$element) {
+    $config = $this->config_factory->get('addthis.settings');
+    $adv_config = $this->config_factory->get('addthis.settings.advanced');
 
+    //Generate AddThisWidgetURL
+    $fragment = [];
 
-      $config = $this->config_factory->get('addthis.settings');
-      $adv_config = $this->config_factory->get('addthis.settings.advanced');
-
-      $menu_style = $config->get('compact_menu.menu_style');
-
-      $addthis_settings = array();
-
-      foreach($menu_style as $key => $val){
-        $c_key = str_replace('addthis_', '', $key);
-        $addthis_settings['menu_style'][$c_key] = $val;
-      }
-
-      // TODO: other section under main settings
-
-      // $pubid = $config->get('analytics.addthis_profile_id');
-
-      /*
-      if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
-          //$widget_js->addAttribute('pubid', $pubid);
-        }
-      */
-
-     /*
-      *  AddThis Advanced Settings
-      */
-      $addthis_adv_settings = array();
-      $addthis_adv_settings['bookmark_url'] = $adv_config->get('addthis_bookmark_url');
-      $addthis_adv_settings['services_css_url'] = $adv_config->get('addthis_services_css_url');
-      $addthis_adv_settings['services_json_url'] = $adv_config->get('addthis_services_json_url');
-      $addthis_adv_settings['widget_js_url'] = $adv_config->get('addthis_widget_js_url');
-      $addthis_adv_settings['conf_code_enabled'] = $adv_config->get('addthis_custom_configuration_code_enabled');
-      $addthis_adv_settings['conf_code'] = $adv_config->get('addthis_custom_configuration_code');
-      $addthis_adv_settings['load_domready'] = $adv_config->get('addthis_widget_load_domready');
-      $addthis_adv_settings['load_async'] = $adv_config->get('addthis_widget_load_async');
-      $addthis_adv_settings['widget_include'] = $adv_config->get('addthis_widget_include');
-      $addthis_adv_settings['css_url_key'] = $adv_config->get('addthis_services_css_url_key');
-      $addthis_adv_settings['json_url_key'] = $adv_config->get('addthis_services_json_url_key');
-
-
-      $element['#attached']['library'][] = 'addthis/addthis.widget';
-      $addThisConfig = $this->getAddThisConfig();
-      $addThisShareConfig = $this->getAddThisShareConfig();
-
-      $element['#attached']['drupalSettings']['addThisWidget'] = [
-        'widgetScript' => $addthis_adv_settings['widget_js_url'],
-        'config' => $addThisConfig,
-        'share' => $addThisShareConfig,
-      ];
-
-
+    $pubid = $config->get('analytics.addthis_profile_id');
+    if (isset($pubid) && !empty($pubid) && is_string($pubid)) {
+      $fragment[] = 'pubid=' . $pubid;
     }
+
+    if ($adv_config->get('addthis_widget_load_async')) {
+      $fragment[] = 'async=1';
+    }
+
+    if ($adv_config->get('addthis_widget_load_domready')) {
+      $fragment[] = 'domready=1';
+    }
+
+
+    $element['#attached']['library'][] = 'addthis/addthis.widget';
+    $addThisConfig = $this->getAddThisConfig();
+    $addThisShareConfig = $this->getAddThisShareConfig();
+
+
+
+    $options = [
+      'fragment' => implode('&', $fragment),
+      'external' => TRUE,
+    ];
+
+
+    $widget_url = $adv_config->get('addthis_widget_js_url');
+    $widgetURL = URL::fromUri($widget_url, $options)->toString();
+
+
+    $element['#attached']['drupalSettings']['addThisWidget'] = [
+      'widgetScript' => $widgetURL,
+      'config' => $addThisConfig,
+      'share' => $addThisShareConfig,
+    ];
+
+
+  }
 
 
 }

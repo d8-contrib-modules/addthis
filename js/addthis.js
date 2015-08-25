@@ -5,6 +5,9 @@ var addthis_config,
 
 (function ($, Drupal, window, document, undefined) {
   Drupal.behaviors.addThisWidget = {
+
+      //@TODO Need to support domready and async loading. See http://support.addthis.com/customer/portal/articles/1338006-url-parameters
+
     attach: function (context, settings) {
       if (context === document) { // only fires on document load
 
