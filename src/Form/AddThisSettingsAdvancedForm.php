@@ -93,11 +93,6 @@ class AddThisSettingsAdvancedForm extends ConfigFormBase {
       '#required' => FALSE,
       '#description' => t('AddThis custom configuration code. See format at <a href="http://addthis.com/" target="_blank">AddThis.com</a>'),
     );
-    $form['advanced_settings_details']['addthis_widget_load_domready'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Load the AddThis resources after the DOM is ready.'),
-      '#default_value' => $config->get('addthis_widget_load_domready'),
-    );
     $form['advanced_settings_details']['addthis_widget_load_async'] = array(
       '#type' => 'checkbox',
       '#title' => t('Initialize asynchronously through addthis.init().'),
@@ -130,7 +125,6 @@ class AddThisSettingsAdvancedForm extends ConfigFormBase {
       ->set('addthis_widget_js_url', $form_state->getValue('addthis_widget_js_url'))
       ->set('addthis_custom_configuration_code_enabled', $form_state->getValue('addthis_custom_configuration_code_enabled'))
       ->set('addthis_custom_configuration_code', $form_state->getValue('addthis_custom_configuration_code'))
-      ->set('addthis_widget_load_domready', $form_state->getValue('addthis_widget_load_domready'))
       ->set('addthis_widget_load_async', $form_state->getValue('addthis_widget_load_async'))
       ->set('addthis_widget_include', $form_state->getValue('addthis_widget_include'))
       ->save();
