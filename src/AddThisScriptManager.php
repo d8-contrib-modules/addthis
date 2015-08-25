@@ -156,9 +156,8 @@ class AddThisScriptManager {
       $fragment[] = 'async=1';
     }
 
-    if ($adv_config->get('addthis_widget_load_domready')) {
-      $fragment[] = 'domready=1';
-    }
+    //Always load the script with domready flag.
+    $fragment[] = 'domready=1';
 
 
     $element['#attached']['library'][] = 'addthis/addthis.widget';
