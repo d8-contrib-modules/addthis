@@ -24,14 +24,16 @@ class AddThisBasicToolbox extends RenderElement {
     $config = $this->configuration;
     return [
       '#theme' => 'addthis_basic_toolbox',
-      '#size' => $config['basic_toolbox']['buttons_size'],
-      '#services' => $config['basic_toolbox']['share_services'],
-      '#extra_classes' => $config['basic_toolbox']['extra_css'],
+      '#size' => 'addthis_16x16_style',
+      '#services' => 'facebook,twitter',
+      '#extra_classes' => '',
+      '#counter_orientation' => 'horizontal',
       '#pre_render' => [
         [$class, 'preRender'],
       ],
     ];
   }
+
 
   public function preRender($element) {
     // Add Script.
@@ -41,18 +43,49 @@ class AddThisBasicToolbox extends RenderElement {
     $services = trim($element['#services']);
     $services = str_replace(' ', '', $services);
     $services = explode(',', $services);
-    $element['services'] = $services;
 
+    // Orientation
+    if ($element['#counter_orientation'] == 'vertical') {
+      $isvertical = TRUE;
+    }
 
-    foreach ($services as $key => $service){
+    foreach ($services as $key => $service) {
       $element['services'][$key] = array();
       $element['services'][$key]['service'] = $service;
+      $attributes = [
+        'class' => ['addthis_button_' . $service]
+      ];
       switch ($service) {
         case 'linkedin_counter':
-          $element['services'][$key]['attributes'] = new Attribute(array('li:counter' => 'top'));
+          $attributes['li:counter'] = $isvertical ? 'top' : '';
+          break;
+        case 'facebook_like':
+          $attributes['fb:like:layout'] = $isvertical ? 'box_count' : 'button_count';
+          break;
+        case 'facebook_share':
+          $attributes['fb:share:layout'] = $isvertical ? 'box_count' : 'button_count';
+          break;
+        case 'google_plusone':
+          $attributes['g:plusone:size'] = $isvertical ? 'tall' : 'standard';
+          break;
+        case 'tweet':
+          $attributes['tw:count'] = $isvertical ? 'vertical' : 'horizontal';
+          // $attributes['tw:via'] = $isvertical ? 'vertical' : 'horizontal'; // TODO: D7 used AddThis::getInstance()->getTwitterVia()
+          break;
+        case 'bubble_style':
+          $attributes['class'][] = 'addthis_counter';
+          $attributes['class'][] = 'addthis_bubble_style';
+          break;
+        case 'pill_style':
+          $attributes['class'][] = 'addthis_counter';
+          $attributes['class'][] = 'addthis_pill_style';
           break;
       }
+
+      $element['services'][$key]['attributes'] = new Attribute($attributes);
+
     }
+
 
     return $element;
   }

@@ -169,6 +169,7 @@ class AddThisBlock extends BlockBase {
           '#size' => $config['basic_toolbox']['buttons_size'],
           '#services' => $config['basic_toolbox']['share_services'],
           '#extra_classes' => $config['basic_toolbox']['extra_css'],
+          '#counter_orientation' => $config['basic_toolbox']['counter_orientation'],
         ];
         break;
     }

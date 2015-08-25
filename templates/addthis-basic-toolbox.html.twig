@@ -6,10 +6,11 @@
  * - element: AddThis Wrapper to be rendered
  *
  */
+ // class="addthis_button_{{ service.service }}"
 #}
 
 <div class="addthis_toolbox addthis_default_style {{ element['#extra_classes'] }} {{ element['#size'] }} ">
     {% for service in element.services %}
-        <a class="addthis_button_{{ service.service }}" {{ service.attributes }} href="#" ></a>
+        <a {{ service.attributes }} href="#" ></a>
     {% endfor %}
 </div>
