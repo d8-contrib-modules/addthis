@@ -19,6 +19,22 @@ use Symfony\Component\Validator\Constraints\False;
 class AddThisSettingsForm extends ConfigFormBase {
 
   /**
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $config_factory;
+
+  /**
+   * Construct function.
+   *
+   * @param \Drupal\Core\Language\LanguageManager $languageManager
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   */
+  public function __construct(\Drupal\Core\Config\ConfigFactory $configFactory) {
+    $this->config_factory = $configFactory;
+  }
+
+
+  /**
    * {@inheritdoc}
    */
   public function getFormID() {
@@ -236,28 +252,31 @@ class AddThisSettingsForm extends ConfigFormBase {
 
     // Google Analytics and Google Social Tracking support.
     $can_do_google_social_tracking = \Drupal::moduleHandler()
-      ->moduleExists('googleanalytics');
+      ->moduleExists('google_analytics');
     //@TODO Get back to this.
-    $google_analytics_config = \Drupal::config(google_analytics . settings);
-    $google_analytics_account = $google_analytics_config->get('google_analytics_account');
+    $google_analytics_config = $this->config_factory->get('google_analytics.settings');
+    $google_analytics_account = $google_analytics_config->get('account');
     $is_google_analytics_setup = $can_do_google_social_tracking && isset($google_analytics_account);
     $form['details_analytics']['google_analytics'] = array(
-      '#theme' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => '<b>' . t('Google Analytics') . '</b>',
+      '#type' => 'markup',
+      '#prefix' => '<div>',
+      '#suffix' => '</div>',
+      '#markup' => '<b>' . t('Google Analytics') . '</b>',
     );
     if (!$can_do_google_social_tracking) {
       $form['details_analytics']['can_do_google_analytics'] = array(
-        '#theme' => 'html_tag',
-        '#tag' => 'p',
-        '#value' => '<span class="admin-disabled">' . t('Install/enable the <a href="http://drupal.org/project/google_analytics" target="_blank">Google Analytics</a> module for Social Tracking support.') . '</span>',
+        '#type' => 'markup',
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        '#markup' => '<span class="admin-disabled">' . t('Install/enable the <a href="http://drupal.org/project/google_analytics" target="_blank">Google Analytics</a> module for Social Tracking support.') . '</span>',
       );
     }
     elseif ($can_do_google_social_tracking && !$is_google_analytics_setup) {
       $form['details_analytics']['can_do_google_analytics'] = array(
-        '#theme' => 'html_tag',
-        '#tag' => 'p',
-        '#value' => '<span class="admin-disabled">' . t('Configure the Google Analytics module correctly with the account code to use this feature.') . '</span>',
+        '#type' => 'markup',
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+        '#markup' => '<span class="admin-disabled">' . t('Configure the Google Analytics module correctly with the account code to use this feature.') . '</span>',
       );
     }
     $form['details_analytics']['addthis_google_analytics_tracking_enabled'] = array(

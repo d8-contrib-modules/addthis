@@ -81,10 +81,10 @@ class AddThisScriptManager {
     ];
 
     //Ensure that the Google Analytics module is enabled for tracking.
-    if (\Drupal::moduleHandler()->moduleExists('googleanalytics')) {
+    if (\Drupal::moduleHandler()->moduleExists('google_analytics')) {
       if ($config->get('analytics.addthis_google_analytics_tracking_enabled')) {
         $configuration['data_ga_property'] = $this->config_factory->get('google_analytics.settings')
-          ->get('google_analytics_account');
+          ->get('account');
         $configuration['data_ga_social'] = $config->get('analytics.addthis_google_analytics_social_tracking_enabled');
       }
     }
