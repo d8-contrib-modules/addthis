@@ -43,6 +43,17 @@ class AddThisBasicToolbox extends RenderElement {
     $services = explode(',', $services);
     $element['services'] = $services;
 
+
+    foreach ($services as $key => $service){
+      $element['services'][$key] = array();
+      $element['services'][$key]['service'] = $service;
+      switch ($service) {
+        case 'linkedin_counter':
+          $element['services'][$key]['attributes'] = new Attribute(array('li:counter' => 'top'));
+          break;
+      }
+    }
+
     return $element;
   }
 
