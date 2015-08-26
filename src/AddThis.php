@@ -14,6 +14,9 @@ use Drupal\Component\Utility\SafeMarkup;
 
 class AddThis {
 
+  const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
+  const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
+
   /**
    * @param \Drupal\addthis\AddThisScriptManager $addThisScriptManager
    */
