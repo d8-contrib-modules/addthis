@@ -14,14 +14,11 @@ use Drupal\Component\Utility\SafeMarkup;
 
 class AddThis {
 
-  const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
-  const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
-
   /* @var AddThisJson */
   private $json;
   private $config;
 
-  /** 
+  /**
    * @param \Drupal\addthis\AddThisScriptManager $addThisScriptManager
    */
   public function __construct(\Drupal\addthis\AddThisScriptManager $addThisScriptManager, \Drupal\Core\Config\ConfigFactory $configFactory) {
@@ -66,7 +63,7 @@ class AddThis {
   }
 
   public function getServicesJsonUrl() {
-    $service_json_url_key = $this->config->get(self::SERVICES_JSON_URL_KEY);
+    $service_json_url_key = $this->config->get('addthis_services_json_url');
     $service_json_url_key = isset($service_json_url_key) ? $service_json_url_key : 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
     return check_url($service_json_url_key);
   }
