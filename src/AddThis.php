@@ -17,7 +17,11 @@ class AddThis {
   const SERVICES_CSS_URL_KEY = 'addthis_services_css_url';
   const SERVICES_JSON_URL_KEY = 'addthis_services_json_url';
 
-  /**
+  /* @var AddThisJson */
+  private $json;
+  private $config;
+
+  /** 
    * @param \Drupal\addthis\AddThisScriptManager $addThisScriptManager
    */
   public function __construct(\Drupal\addthis\AddThisScriptManager $addThisScriptManager, \Drupal\Core\Config\ConfigFactory $configFactory) {
@@ -26,11 +30,6 @@ class AddThis {
     $this->json = new AddThisJson();
     $this->setConfig();
   }
-
-
-  /* @var AddThisJson */
-  private $json;
-  private $config;
 
   /**
    * Set the json object.
@@ -42,7 +41,6 @@ class AddThis {
   public function setConfig() {
     $this->config = $this->config_factory->get('addthis.settings');
   }
-
 
   public function getServices() {
     $rows = array();
@@ -61,18 +59,15 @@ class AddThis {
           '#type' => 'inline_template',
           '#template' => '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName,
         );
-        //$rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
         $rows[$serviceCode] = $service;
       }
     }
     return $rows;
   }
 
-  const DEFAULT_SERVICES_JSON_URL = 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
-
   public function getServicesJsonUrl() {
     $service_json_url_key = $this->config->get(self::SERVICES_JSON_URL_KEY);
-    $service_json_url_key = isset($service_json_url_key) ? $service_json_url_key : self::DEFAULT_SERVICES_JSON_URL;
+    $service_json_url_key = isset($service_json_url_key) ? $service_json_url_key : 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
     return check_url($service_json_url_key);
   }
 
