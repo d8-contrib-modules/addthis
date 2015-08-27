@@ -126,8 +126,7 @@ class AddThis {
           '#type' => 'inline_template',
           '#template' => '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName,
         );
-        //$rows[$serviceCode] = '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName;
-        $rows[$serviceCode] = $service;
+        $rows[$serviceCode] = render($service);
       }
     }
     return $rows;

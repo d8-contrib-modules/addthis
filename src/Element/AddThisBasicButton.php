@@ -21,7 +21,6 @@ class AddThisBasicButton extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    $config = $this->configuration;
     return [
       '#theme' => 'addthis_basic_button',
       '#size' => 'addthis_16x16_style',
@@ -32,10 +31,10 @@ class AddThisBasicButton extends RenderElement {
     ];
   }
 
-  public function preRender($element) {
+  public static function preRender($element) {
     // Add button.
     $button_img = 'http://s7.addthis.com/static/btn/sm-share-en.gif';
-    if ($element['size'] === 'big') {
+    if ($element['#size'] === 'big') {
       $button_img = 'http://s7.addthis.com/static/btn/v2/lg-share-en.gif';
     }
 

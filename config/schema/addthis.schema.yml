@@ -12,24 +12,24 @@ addthis.settings:
           type: mapping
           label: 'Style'
           mapping:
-          addthis_co_brand:
-            type: string
-            label: 'Branding text'
-          addthis_ui_header_color:
-            type: string
-            label: 'Header text color'
-          addthis_ui_header_background_color:
-            type: string
-            label: 'Header background color'
-          addthis_click_to_open_compact_menu_enabled:
-            type: boolean
-            label: 'Open compact menu on click'
-          addthis_open_windows_enabled:
-            type: boolean
-            label: 'Use pop-up windows'
-          addthis_ui_delay:
-            type: string
-            label: 'Menu open delay'
+            addthis_co_brand:
+              type: string
+              label: 'Branding text'
+            addthis_ui_header_color:
+              type: string
+              label: 'Header text color'
+            addthis_ui_header_background_color:
+              type: string
+              label: 'Header background color'
+            addthis_click_to_open_compact_menu_enabled:
+              type: integer
+              label: 'Open compact menu on click'
+            addthis_open_windows_enabled:
+              type: integer
+              label: 'Use pop-up windows'
+            addthis_ui_delay:
+              type: string
+              label: 'Menu open delay'
         enabled_services:
           type: mapping
           label: 'Compact menu enabled services'
@@ -123,3 +123,40 @@ addthis.settings.advanced:
     addthis_widget_include:
       type: integer
       label: 'Load widget js.'
+block.settings.addthis_block:
+  type: block_settings
+  label: 'AddThis Block Configuration'
+  mapping:
+    display_type:
+      type: string
+      label: 'Display Type'
+    basic_button:
+      type: mapping
+      label: 'Basic Button Block Settings'
+      mapping:
+        button_size:
+          type: string
+          label: 'Button Size'
+        extra_css:
+           type: string
+           label: 'Extra CSS'
+    basic_toolbox:
+      type: mapping
+      label: 'Basic Toolbox Block Settings'
+      mapping:
+        share_services:
+          type: string
+          label: 'Share Services'
+        buttons_size:
+          type: string
+          label: 'Button Size'
+        counter_orientation:
+          type: string
+          label: 'Counter Orientation'
+        extra_css:
+           type: string
+           label: 'Extra CSS'
+
+
+
+

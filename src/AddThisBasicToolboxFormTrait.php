@@ -107,7 +107,7 @@ trait AddThisBasicToolboxFormTrait {
 
     // Return error.
     if ($bad) {
-      $form_state->setErrorByName($element['name'], t('The declared services are incorrect or nonexistent.'));
+      $form_state->setErrorByName($element['#title'], t('The declared services are incorrect or nonexistent.'));
     }
   }
 
