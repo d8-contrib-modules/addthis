@@ -22,6 +22,11 @@ class AddThisPermissionsTest extends WebTestBase {
    */
   public static $modules = array('addthis', 'block', 'field', 'dblog');
 
+  /**
+   * Verifies that users cannot access addthis pages without permissions
+   * - Creates a new user with administer site permissions
+   * - verifies user cannot access addthis settings.
+   */
   function testAddThisConfigPermissionDenied(){
     // Create user with permission to "administer addthis settings".
     $user1 = $this->drupalCreateUser(array('administer site configuration'));
@@ -36,6 +41,12 @@ class AddThisPermissionsTest extends WebTestBase {
       'A user without administer advanced addthis permission should not be able to access AddThis system settings.');
   }
 
+  /**
+   * Verifies that users can access addthis basic settings page with
+   * administer addthis settings permission
+   * - Creates a new user with administer addthis settings
+   * - verifies user can access addthis basic settings form.
+   */
   function testAddThisConfigPermissionGranted(){
     // Create user with permission to "administer addthis settings".
     $user1 = $this->drupalCreateUser(array('administer addthis settings'));
@@ -49,6 +60,12 @@ class AddThisPermissionsTest extends WebTestBase {
       'A user without administer advanced addthis permission should not be able to access AddThis system settings.');
   }
 
+  /**
+   * Verifies that users can access addthis advanced settings with
+   * administer advanced addthis settings permission.
+   * - Creates a new user with dminister advanced addthis settings
+   * - verifies user can access addthis advanced settings.
+   */
   function testAddThisConfigPermissionAdvancedGranted(){
     // Create user with permission to "administer advanced addthis settings".
     $user1 = $this->drupalCreateUser(array('administer advanced addthis settings'));
