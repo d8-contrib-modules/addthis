@@ -19,29 +19,16 @@ class AddThisFieldTest extends AddThisFieldWebTestBase {
    */
   public static $modules = array('addthis', 'node', 'field', 'dblog');
 
-  /**
-   * User account with all available permissions
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $adminUser;
 
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(){
-    parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(array_keys(\Drupal::service('user.permissions')->getPermissions()));
-    $this->drupalLogin($this->adminUser);
-
-  }
   /**
    * Tests ability to add the addthis field to a node.
    * - Creates content type
    * - Adds AddThis field
    */
   public function testAddThisAddFieldToNode() {
+    // Add a single field as administrator user.
+    $this->drupalLogin($this->administratorAccount);
     $this->fieldName = $this->createField('addthis', 'addthis_button_widget', '1');
   }
 
@@ -55,6 +42,8 @@ class AddThisFieldTest extends AddThisFieldWebTestBase {
    * - @TODO Confirm saving settings & confrim
    */
   public function testAddThisFieldToolboxWidgetForm(){
+    // Add a single field as administrator user.
+    $this->drupalLogin($this->administratorAccount);
     $this->fieldName = $this->createField('addthis', 'addthis_button_widget', '1');
     $this->drupalGet('admin/structure/types/manage/'. $this->contentTypeName . '/display');
     $this->assertText($this->fieldName, 'Field is configurable');
@@ -92,6 +81,8 @@ class AddThisFieldTest extends AddThisFieldWebTestBase {
    * - @TODO Confirm saving settings & confrim
    */
   public function testAddThisFieldButtonWidgetForm(){
+    // Add a single field as administrator user.
+    $this->drupalLogin($this->administratorAccount);
     $this->fieldName = $this->createField('addthis', 'addthis_button_widget', '1');
     $this->drupalGet('admin/structure/types/manage/'. $this->contentTypeName . '/display');
     $this->assertText($this->fieldName, 'Field is configurable');

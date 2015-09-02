@@ -20,7 +20,7 @@ class AddThisBlockTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('addthis', 'block', 'node', 'field', 'dblog');
+  public static $modules = array('addthis', 'block');
 
   /**
    * User account with all available permissions
@@ -34,7 +34,9 @@ class AddThisBlockTest extends WebTestBase {
    */
   protected function setUp(){
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(array_keys(\Drupal::service('user.permissions')->getPermissions()));
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
   /**
@@ -97,6 +99,7 @@ class AddThisBlockTest extends WebTestBase {
       'settings[addthis_settings][type_settings][basic_toolbox][extra_css]' => $this->randomMachineName(),
     ];
     $this->drupalPostForm('admin/structure/block/manage/' . $block['id'], $edit, t('Save block'));
+    $this->drupalGet('admin/structure/block/manage/' . $block['id']);
     $this->assertRaw($edit['settings[addthis_settings][display_type]'], 'Content of configurable type successfully verified.');
     $this->assertRaw($edit['settings[addthis_settings][type_settings][basic_toolbox][share_services]'], 'Content of configurable share services block successfully verified.');
     $this->assertRaw($edit['settings[addthis_settings][type_settings][basic_toolbox][buttons_size]'], 'Content of configurable button size block successfully verified.');

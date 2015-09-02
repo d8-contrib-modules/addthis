@@ -41,7 +41,7 @@ class AddThisFieldWebTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'field_ui', 'field_example');
+  public static $modules = array('addthis', 'node', 'field_ui', 'field',);
 
   /**
    * {@inheritdoc}
@@ -57,6 +57,7 @@ class AddThisFieldWebTestBase extends WebTestBase {
       'administer content types',
       'administer node fields',
       'administer node form display',
+      'administer node display',
     );
     $this->administratorAccount = $this->drupalCreateUser($permissions);
     parent::drupalLogin($this->administratorAccount);
