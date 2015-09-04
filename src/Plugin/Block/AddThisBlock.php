@@ -30,7 +30,7 @@ class AddThisBlock extends BlockBase {
    */
   public function defaultConfiguration() {
     return array(
-      'type' => 'addthis_disabled',
+      'display_type' => 'addthis_basic_button',
       'basic_toolbox' => $this->addThisBasicToolboxGetDefaults(),
       'basic_button' => $this->addThisBasicButtonGetDefaults(),
     );
@@ -42,29 +42,25 @@ class AddThisBlock extends BlockBase {
   function blockForm($form, FormStateInterface $form_state) {
     $settings = $this->getConfiguration();
 
-    $type = $settings['type'];
-    $rebuild = $form_state->getValue([
-      'settings',
+    //get type from config
+    $default_type = $settings['display_type'];
+
+    $selected_type = $form_state->getValue([
       'settings',
       'addthis_settings',
-      'type'
+      'display_type'
     ]);
-    if (isset($rebuild)) {
-      $type = $form_state->getValue([
-        'settings',
-        'settings',
-        'addthis_settings',
-        'type'
-      ]);
-    }
 
-    $form['settings']['addthis_settings'] = array(
+    $selected_type = isset($selected_type) ? $selected_type : $default_type;
+
+
+    $form['addthis_settings'] = array(
       '#type' => 'fieldset',
       '#title' => 'Display settings',
 
     );
 
-    $form['settings']['addthis_settings']['type'] = array(
+    $form['addthis_settings']['display_type'] = array(
       '#type' => 'select',
       '#title' => t('Formatter for @title', array('@title' => 'AddThis block')),
       '#title_display' => 'invisible',
@@ -72,25 +68,25 @@ class AddThisBlock extends BlockBase {
         'addthis_basic_button' => 'AddThis Basic Button',
         'addthis_basic_toolbox' => 'AddThis Basic Toolbox',
       ],
-      '#default_value' => $settings['type'],
+      '#default_value' => isset($default_type) ? $default_type : 'addthis_basic_button',
       '#attributes' => array('class' => array('addthis-display-type')),
       '#ajax' => array(
         'callback' => array($this, 'addthisAjaxCallback'),
         'wrapper' => 'addthis_type_settings',
       ),
     );
-    $form['settings']['addthis_settings']['type_settings'] = array(
+    $form['addthis_settings']['type_settings'] = array(
       '#prefix' => '<div id="addthis_type_settings"',
       '#suffix' => '</div>',
     );
-    if ($type == 'addthis_basic_toolbox') {
+    if (isset($selected_type) && $selected_type == 'addthis_basic_toolbox') {
       $basicToolbox = $this->addThisBasicToolboxForm($settings['basic_toolbox']);
-      $form['settings']['addthis_settings']['type_settings']['basic_toolbox'] = $basicToolbox;
+      $form['addthis_settings']['type_settings']['basic_toolbox'] = $basicToolbox;
     }
     else {
-      if ($type == 'addthis_basic_button') {
-        $basicButton =  $this->addThisBasicButtonForm($settings['basic_button']);
-        $form['settings']['addthis_settings']['type_settings']['basic_button'] = $basicButton;
+      if (isset($selected_type) && $selected_type == 'addthis_basic_button') {
+        $basicButton = $this->addThisBasicButtonForm($settings['basic_button']);
+        $form['addthis_settings']['type_settings']['basic_button'] = $basicButton;
       }
     }
 
@@ -105,7 +101,7 @@ class AddThisBlock extends BlockBase {
    * @return mixed
    */
   public function addthisAjaxCallback(array $form, FormStateInterface $form_state) {
-    return $form['settings']['settings']['addthis_settings']['type_settings'];
+    return $form['settings']['addthis_settings']['type_settings'];
   }
 
   /**
@@ -115,17 +111,15 @@ class AddThisBlock extends BlockBase {
 
     //@TODO Settings for unselected type get wiped because they dont exist in form.
     // Try not to overwrite them if possible.
-    $this->configuration['type'] = $form_state->getValue([
-      'settings',
+    $this->configuration['display_type'] = $form_state->getValue([
       'addthis_settings',
-      'type'
+      'display_type'
     ]);
 
     //Handle saving the partial elements provided by AddThisBasicToolboxFormTrait.
     $basicToolboxKeys = $this->addThisBasicToolboxGetDefaults();
-    foreach($basicToolboxKeys as $key => $value) {
+    foreach ($basicToolboxKeys as $key => $value) {
       $this->configuration['basic_toolbox'][$key] = $form_state->getValue([
-        'settings',
         'addthis_settings',
         'type_settings',
         'basic_toolbox',
@@ -135,16 +129,14 @@ class AddThisBlock extends BlockBase {
 
     //Handle saving the partial elements provided by AddThisBasicButtonFormTrait.
     $basicButtonKeys = $this->addThisBasicButtonGetDefaults();
-    foreach($basicButtonKeys as $key => $value) {
+    foreach ($basicButtonKeys as $key => $value) {
       $this->configuration['basic_button'][$key] = $form_state->getValue([
-        'settings',
         'addthis_settings',
         'type_settings',
         'basic_button',
         $key
       ]);
     }
-
 
 
   }
@@ -155,7 +147,7 @@ class AddThisBlock extends BlockBase {
   public function build() {
     $config = $this->configuration;
 
-    switch ($config['type']) {
+    switch ($config['display_type']) {
       case 'addthis_basic_button':
         return [
           '#type' => 'addthis_basic_button',

@@ -23,7 +23,7 @@ var addthis_config,
                     addthis_config = settings.addThisWidget.config;
                 }
                 if (typeof settings.addThisWidget.share !== 'undefined') {
-                    addthis_share = settings.addThisWidget.config;
+                    addthis_share = settings.addThisWidget.share;
                 }
             }
         }

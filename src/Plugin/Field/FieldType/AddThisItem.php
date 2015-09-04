@@ -31,10 +31,7 @@ class AddThisItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return array(
-      'max_length' => 255,
-      'is_ascii' => FALSE,
-    ) + parent::defaultStorageSettings();
+    return [] + parent::defaultStorageSettings();
   }
 
   /**
@@ -44,9 +41,8 @@ class AddThisItem extends FieldItemBase {
     return array(
       'columns' => array(
         'value' => array(
-          'type' => $field_definition->getSetting('is_ascii') === TRUE ? 'varchar_ascii' : 'varchar',
-          'length' => (int) $field_definition->getSetting('max_length'),
-          'binary' => $field_definition->getSetting('case_sensitive'),
+          'type' => 'varchar',
+          'length' => 255,
         ),
       ),
     );
@@ -59,32 +55,6 @@ class AddThisItem extends FieldItemBase {
     return FALSE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getConstraints() {
-    $constraints = parent::getConstraints();
-
-    if ($max_length = $this->getSetting('max_length')) {
-      $constraint_manager = \Drupal::typedDataManager()
-        ->getValidationConstraintManager();
-      $constraints[] = $constraint_manager->create('ComplexData', array(
-        'value' => array(
-          'Length' => array(
-            'max' => $max_length,
-            'maxMessage' => t('%name: may not be longer than @max characters.', array(
-              '%name' => $this->getFieldDefinition()
-                ->getLabel(),
-              '@max' => $max_length
-            )),
-          ),
-        ),
-      ));
-    }
-
-    return $constraints;
-  }
-
 
   /**
    * {@inheritdoc}
@@ -93,10 +63,7 @@ class AddThisItem extends FieldItemBase {
     // This is called very early by the user entity roles field. Prevent
     // early t() calls by using the TranslationWrapper.
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(new TranslationWrapper('Text value'))
-      ->setSetting('case_sensitive', $field_definition->getSetting('case_sensitive'))
-      ->setRequired(TRUE);
-
+      ->setLabel(new TranslationWrapper('Text value'));
     return $properties;
   }
 

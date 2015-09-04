@@ -56,7 +56,8 @@ class AddThis {
           '#type' => 'inline_template',
           '#template' => '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName,
         );
-        $rows[$serviceCode] = $service;
+        //#options expects a string, not an array. Render the element so it becomes a string.
+        $rows[$serviceCode] = render($service);
       }
     }
     return $rows;

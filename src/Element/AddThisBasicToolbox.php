@@ -21,7 +21,6 @@ class AddThisBasicToolbox extends RenderElement {
    */
   public function getInfo() {
     $class = get_class($this);
-    $config = $this->configuration;
     return [
       '#theme' => 'addthis_basic_toolbox',
       '#size' => 'addthis_16x16_style',
@@ -35,7 +34,7 @@ class AddThisBasicToolbox extends RenderElement {
   }
 
 
-  public function preRender($element) {
+  public static function preRender($element) {
     // Add Script.
     $script_manager = \Drupal::getContainer()->get('addthis.script_manager');
     $script_manager->attachJsToElement($element);

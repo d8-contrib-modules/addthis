@@ -5,12 +5,6 @@
  */
 function addthis_theme() {
   return [
-    'addthis_wrapper' => [
-      'render element' => 'element',
-    ],
-    'addthis_element' => [
-      'render element' => 'element',
-    ],
     'addthis_basic_button' => [
       'render element' => 'element',
     ],
