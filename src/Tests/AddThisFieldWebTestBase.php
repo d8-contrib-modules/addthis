@@ -12,9 +12,8 @@
 namespace Drupal\addthis\Tests;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\simpletest\WebTestBase;
 
-class AddThisFieldWebTestBase extends WebTestBase {
+class AddThisFieldWebTestBase extends AddThisBaseTest {
 
   /**
    * @var string
@@ -41,7 +40,7 @@ class AddThisFieldWebTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('addthis', 'node', 'field_ui', 'field',);
+  public static $modules = array('node', 'field_ui', 'field',);
 
   /**
    * {@inheritdoc}

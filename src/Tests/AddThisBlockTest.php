@@ -5,14 +5,13 @@
  */
 namespace Drupal\addthis\Tests;
 
-use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the basic functionality provided by AddThis.
  *
  * @group addthis
  */
-class AddThisBlockTest extends WebTestBase {
+class AddThisBlockTest extends AddThisBaseTest {
 
 
   /**
@@ -20,7 +19,7 @@ class AddThisBlockTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('addthis', 'block');
+  public static $modules = array('block');
 
   /**
    * User account with all available permissions

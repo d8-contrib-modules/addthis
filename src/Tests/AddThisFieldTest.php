@@ -12,14 +12,6 @@ namespace Drupal\addthis\Tests;
  */
 class AddThisFieldTest extends AddThisFieldWebTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('addthis', 'node', 'field', 'dblog');
-
-
 
   /**
    * Tests ability to add the addthis field to a node.

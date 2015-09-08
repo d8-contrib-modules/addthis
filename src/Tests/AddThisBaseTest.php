@@ -36,11 +36,32 @@ class AddThisBaseTest extends WebTestBase {
 
   }
 
-  public function testAddThisToolboxMarkup($services){
+  /**
+   * Helper function to test the toolbox markup on a page.
+   * - Ensure the container element has the correct AddThis Class + Custom Classes
+   * - Loop through the services enabled
+   * - Ensure anchor tag is present with the correct class.
+   *
+   * @param $services
+   * @param $button_size
+   * @param $orientation
+   * @param $extra_css
+   */
+  public function testAddThisToolboxMarkup($services, $button_size, $orientation, $extra_css){
 
   }
 
-  public function testAddThisButtonMarkup(){
+  /**
+   * Helper function to test the basic button markup on a page.
+   * - Ensure the container element has the correct AddThis Class + Custom Classes
+   * - Ensure the correct button size is present.
+   *
+   * @param $services
+   * @param $button_size
+   * @param $orientation
+   * @param $extra_css
+   */
+  public function testAddThisButtonMarkup($button_size, $extra_css){
 
   }
 
