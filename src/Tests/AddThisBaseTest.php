@@ -9,6 +9,9 @@ namespace Drupal\addthis\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
+/**
+ * Tests the add this functionality.
+ */
 class AddThisBaseTest extends WebTestBase {
 
   /**
