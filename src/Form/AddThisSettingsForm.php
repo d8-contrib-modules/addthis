@@ -6,8 +6,6 @@
 
 namespace Drupal\addthis\Form;
 
-use Drupal\addthis\AddThisScriptManager;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Xss;
@@ -16,6 +14,22 @@ use Drupal\Component\Utility\Xss;
  * Defines a form to configure maintenance settings for this site.
  */
 class AddThisSettingsForm extends ConfigFormBase {
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $config_factory;
+
+  /**
+   * Construct function.
+   *
+   * @param \Drupal\Core\Language\LanguageManager $languageManager
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   */
+  public function __construct(\Drupal\Core\Config\ConfigFactory $configFactory) {
+    $this->config_factory = $configFactory;
+  }
+
 
   /**
    * {@inheritdoc}
@@ -36,8 +50,6 @@ class AddThisSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('addthis.settings');
-    $add_this_script_manager = \Drupal::service('addthis.script_manager');
-
 
     //Add our library to the settings form to add in custom CSS.
     $form['#attached']['library'][] = 'addthis/addthis.admin';
@@ -114,10 +126,12 @@ class AddThisSettingsForm extends ConfigFormBase {
       '#open' => FALSE,
     );
 
+    $add_this_service = \Drupal::service('addthis.addthis');
+
     $form['compact_menu']['enabled_services']['addthis_enabled_services'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Enabled services'),
-      '#options' => $add_this_script_manager->getServices(),
+      '#options' => $add_this_service->getServices(),
       '#default_value' => $config->get('compact_menu.enabled_services.addthis_enabled_services'),
       '#required' => FALSE,
       '#columns' => 3,
@@ -162,7 +176,7 @@ class AddThisSettingsForm extends ConfigFormBase {
     $form['excluded_services']['addthis_excluded_services'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Excluded services'),
-      '#options' => $add_this_script_manager->getServices(),
+      '#options' => $add_this_service->getServices(),
       '#default_value' => $config->get('excluded_services.addthis_excluded_services'),
       '#required' => FALSE,
       '#columns' => 3,
@@ -237,7 +251,7 @@ class AddThisSettingsForm extends ConfigFormBase {
     $can_do_google_social_tracking = \Drupal::moduleHandler()
       ->moduleExists('google_analytics');
     //@TODO Get back to this.
-    $google_analytics_config = $this->configFactory()->get('google_analytics.settings');
+    $google_analytics_config = $this->config_factory->get('google_analytics.settings');
     $google_analytics_account = $google_analytics_config->get('google_analytics_account');
     $is_google_analytics_setup = $can_do_google_social_tracking && isset($google_analytics_account);
     $form['analytics']['google_analytics'] = array(

@@ -10,6 +10,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Component\Utility\Xss;
+use Drupal\addthis\AddThis;
 
 /**
  * Defines a form to configure maintenance settings for this site.
