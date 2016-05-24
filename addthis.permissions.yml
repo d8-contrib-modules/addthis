@@ -1,0 +1,6 @@
+administer addthis settings:
+  title: 'Administer AddThis Settings'
+  description: 'Perform configuration tasks for AddThis.'
+administer advanced addthis settings:
+  title: 'Administer Advanced AddThis Settings'
+  description: 'Perform advanced configuration tasks for AddThis.'

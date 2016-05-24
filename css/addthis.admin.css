@@ -1,0 +1,25 @@
+.addthis_service_icon {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+#edit-addthis-enabled-services .form-item, #edit-addthis-excluded-services .form-item {
+    float: left;
+    width: 20%;
+}
+
+#edit-addthis-enabled-services .form-item .description {
+    clear: both;
+}
+
+#edit-addthis-excluded-services label.option,
+#edit-addthis-enabled-services label.option,
+#edit-addthis-excluded-services .addthis_service_icon,
+#edit-addthis-enabled-services .addthis_service_icon {
+  display: inline-block;
+}
+
+#edit-addthis-excluded-services .addthis_service_icon,
+#edit-addthis-enabled-services .addthis_service_icon {
+  margin-bottom: -1.5px;
+}

@@ -12,24 +12,24 @@ addthis.settings:
           type: mapping
           label: 'Style'
           mapping:
-          addthis_co_brand:
-            type: string
-            label: 'Branding text'
-          addthis_ui_header_color:
-            type: string
-            label: 'Header text color'
-          addthis_ui_header_background_color:
-            type: string
-            label: 'Header background color'
-          addthis_click_to_open_compact_menu_enabled:
-            type: boolean
-            label: 'Open compact menu on click'
-          addthis_open_windows_enabled:
-            type: boolean
-            label: 'Use pop-up windows'
-          addthis_ui_delay:
-            type: string
-            label: 'Menu open delay'
+            addthis_co_brand:
+              type: string
+              label: 'Branding text'
+            addthis_ui_header_color:
+              type: string
+              label: 'Header text color'
+            addthis_ui_header_background_color:
+              type: string
+              label: 'Header background color'
+            addthis_click_to_open_compact_menu_enabled:
+              type: integer
+              label: 'Open compact menu on click'
+            addthis_open_windows_enabled:
+              type: integer
+              label: 'Use pop-up windows'
+            addthis_ui_delay:
+              type: string
+              label: 'Menu open delay'
         enabled_services:
           type: mapping
           label: 'Compact menu enabled services'
@@ -65,7 +65,7 @@ addthis.settings:
             label: 'Services Excluded'
     analytics:
       type: mapping
-      label: 'Analytics & Tracking'
+      label: 'Analytics and Tracking'
       mapping:
         addthis_profile_id:
             type: string
@@ -92,4 +92,71 @@ addthis.settings:
         addthis_twitter_template:
           type: string
           label: 'Template text'
+addthis.settings.advanced:
+  type: mapping
+  label: 'AddThis Advanced Settings'
+  mapping:
+    addthis_bookmark_url:
+      type: string
+      label: 'Bookmark URL'
+    addthis_services_css_url:
+      type: string
+      label: 'Services CSS URL'
+    addthis_services_json_url:
+      type: string
+      label: 'Services JSON URL'
+    addthis_widget_js_url:
+      type: string
+      label: 'Widget JS URL'
+    addthis_custom_configuration_code_enabled:
+      type: boolean
+      label: 'Use custom AddThis configuration code'
+    addthis_custom_configuration_code:
+      type: string
+      label: 'AddThis custom configuration code'
+    addthis_widget_load_domready:
+      type: boolean
+      label: 'Load the AddThis resources after the DOM is ready'
+    addthis_widget_load_async:
+      type: boolean
+      label: 'Initialize asynchronously through addthis.init()'
+    addthis_widget_include:
+      type: integer
+      label: 'Load widget js.'
+block.settings.addthis_block:
+  type: block_settings
+  label: 'AddThis Block Configuration'
+  mapping:
+    display_type:
+      type: string
+      label: 'Display Type'
+    basic_button:
+      type: mapping
+      label: 'Basic Button Block Settings'
+      mapping:
+        button_size:
+          type: string
+          label: 'Button Size'
+        extra_css:
+           type: string
+           label: 'Extra CSS'
+    basic_toolbox:
+      type: mapping
+      label: 'Basic Toolbox Block Settings'
+      mapping:
+        share_services:
+          type: string
+          label: 'Share Services'
+        buttons_size:
+          type: string
+          label: 'Button Size'
+        counter_orientation:
+          type: string
+          label: 'Counter Orientation'
+        extra_css:
+           type: string
+           label: 'Extra CSS'
+
+
+
 

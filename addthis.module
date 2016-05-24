@@ -1,2 +1,17 @@
 <?php
 
+/**
+ * Implements hook_theme().
+ */
+function addthis_theme() {
+  return [
+    'addthis_basic_button' => [
+      'render element' => 'element',
+    ],
+    'addthis_basic_toolbox' => [
+      'render element' => 'element',
+    ],
+  ];
+}
+
+

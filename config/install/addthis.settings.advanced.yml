@@ -1,0 +1,10 @@
+# TODO: remove prefix from these variables. Combine with addthis.settings.yml?
+addthis_bookmark_url: 'http://www.addthis.com/bookmark.php?v=300'
+addthis_services_css_url: 'http://cache.addthiscdn.com/icons/v1/sprites/services.css'
+addthis_services_json_url: 'http://cache.addthiscdn.com/services/v1/sharing.en.json'
+addthis_widget_js_url: 'http://s7.addthis.com/js/300/addthis_widget.js'
+addthis_custom_configuration_code_enabled: FALSE
+addthis_custom_configuration_code: 'var addthis_config = {}'
+addthis_widget_load_domready: TRUE
+addthis_widget_load_async: FALSE
+addthis_widget_include: 2
