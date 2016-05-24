@@ -19,6 +19,10 @@
 namespace Drupal\addthis;
 
 
+use Drupal\addthis\Util\AddThisJson;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 
 class AddThisScriptManager {
@@ -128,6 +132,48 @@ class AddThisScriptManager {
     return $servicesAsCommaSeparatedString;
   }
 
+  /**
+   * Get an array containing the rendered AddThis services.
+   *
+   * @return array
+   *   An array containing the rendered AddThis services.
+   */
+  public function getServices() {
+    $rows = array();
+    $json = new AddThisJson();
+    $services = $json->decode($this->getServicesJsonUrl());
+    if (empty($services)) {
+      drupal_set_message(t('AddThis services could not be loaded from @service_url', array(
+        '@service_url',
+        $this->getServicesJsonUrl()
+      )), 'warning');
+    }
+    else {
+      foreach ($services['data'] as $service) {
+        $serviceCode = SafeMarkup::checkPlain($service['code']);
+        $serviceName = SafeMarkup::checkPlain($service['name']);
+        $service = array(
+          '#type' => 'inline_template',
+          '#template' => '<span class="addthis_service_icon icon_' . $serviceCode . '"></span> ' . $serviceName,
+        );
+        //#options expects a string, not an array. Render the element so it becomes a string.
+        $rows[$serviceCode] = render($service);
+      }
+    }
+    return $rows;
+  }
+
+  /**
+   * Gets the AddThis services url.
+   *
+   * @return string
+   */
+  public function getServicesJsonUrl() {
+    $config = $this->config_factory->get('addthis.settings.advanced');
+    $service_json_url_key = $config->get('addthis_services_json_url');
+    $service_json_url_key = isset($service_json_url_key) ? $service_json_url_key : 'http://cache.addthiscdn.com/services/v1/sharing.en.json';
+    return Html::escape(UrlHelper::stripDangerousProtocols($service_json_url_key));
+  }
 
   /**
    * Attach the widget js to the element.

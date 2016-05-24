@@ -10,7 +10,6 @@ use Drupal\addthis\AddThisBasicToolboxFormTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\addthis\AddThis;
 
 /**
  * Plugin implementation of the 'addthis_basic_toolbox' formatter.

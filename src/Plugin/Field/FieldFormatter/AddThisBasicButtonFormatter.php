@@ -10,7 +10,6 @@ use Drupal\addthis\AddThisBasicButtonFormTrait;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\addthis\AddThis;
 
 
 /**
