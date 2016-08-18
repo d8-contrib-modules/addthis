@@ -25,7 +25,7 @@ class AddThisFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $language) {
     //@TODO Implement viewElements()
     $element = array();
     $display_type = 'addthis_disabled';
