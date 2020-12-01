@@ -1,0 +1,15 @@
+addthis.admin:
+  version: VERSION
+  css:
+    theme:
+      http://cache.addthiscdn.com/icons/v1/sprites/services.css: {}
+      css/addthis.admin.css: {}
+
+addthis.widget:
+  version: VERSION
+  js:
+    js/addthis.js: {}
+  dependencies:
+      - core/jquery
+      - core/drupal
+      - core/drupalSettings
