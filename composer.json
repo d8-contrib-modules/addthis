@@ -1,0 +1,13 @@
+{
+  "name": "kcmus/addthis",
+  "type": "drupal-custom-module",
+  "description": "Social sharing for KCM.org",
+  "keywords": ["Drupal", "KCM", "Social"],
+  "homepage": "https://github.com/kcmus/addthis",
+  "license": "proprietary",
+  "extra": { },
+  "minimum-stability": "dev",
+  "require": {
+    "drupal/core": "^8.9"
+  }
+}
