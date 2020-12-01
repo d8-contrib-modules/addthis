@@ -10,7 +10,7 @@ namespace Drupal\addthis\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslationWrapper;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -61,9 +61,9 @@ class AddThisItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     // This is called very early by the user entity roles field. Prevent
-    // early t() calls by using the TranslationWrapper.
+    // early t() calls by using the TranslatableMarkup.
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(new TranslationWrapper('Text value'));
+      ->setLabel(new TranslatableMarkup('Text value'));
     return $properties;
   }
 
