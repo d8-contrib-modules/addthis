@@ -45,7 +45,14 @@ class AddThisBlock extends BlockBase {
     //get type from config
     $default_type = $settings['display_type'];
 
-    $selected_type = $form_state->getValue([
+    /**
+     * $form_state->getValue() triggers a fatal error, so this workaround was applied.
+     *
+     * @see https://www.drupal.org/project/drupal/issues/2798261 for complete discussion
+     *
+     * @see https://www.drupal.org/project/drupal/issues/2798261#comment-11761356
+     */
+    $selected_type = $form_state->getCompleteFormState()->getValue([
       'settings',
       'addthis_settings',
       'display_type'
