@@ -51,9 +51,9 @@ trait AddThisBasicToolboxFormTrait {
         get_class() . '::addThisDisplayElementServicesValidate'
       ],
       '#description' =>
-        t('Specify the names of the sharing services and seperate them with a , (comma). <a href="http://www.addthis.com/services/list" target="_blank">The names on this list are valid.</a>') .
-        t('Elements that are available but not ont the services list are (!services).',
-          ['!services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, google_plusone, stumbleupon_badge, counter_* (several supported services), linkedin_counter']
+        t('Specify the names of the sharing services and seperate them with a , (comma). <a href=":url" target="_blank">The names on this list are valid.</a>', [':url' => 'https://www.addthis.com/services/list']) .
+        t('Elements that are available but not on the services list are (@services).',
+          ['@services' => 'bubble_style, pill_style, tweet, facebook_send, twitter_follow_native, stumbleupon_badge, counter_* (several supported services), linkedin_counter']
         ),
     ];
     $element['buttons_size'] = [
