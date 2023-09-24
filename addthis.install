@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for AddThis.
+ */
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Removes the addthis module.
+ */
+function addthis_update_1001 (){
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $entity_definitions = $entity_type_manager->getDefinitions();
+// Create a list of entity types.
+  $entity_types_list = [];
+  foreach($entity_definitions as $entity_name => $entity_definition) {
+    $field_storage = FieldStorageConfig::loadByName($entity_name, 'field_addthis');
+    if (!empty($field_storage)) {
+      // TODO: Implement this.
+      $entity_types_list[$entity_name] = $field_storage->getBundles();
+    }
+  }
+  foreach($entity_types_list as $name => $bundles) {
+    foreach ($bundles as $bundle) {
+      // Deleting field.
+      FieldConfig::loadByName($name, $bundle, 'field_addthis')->delete();
+    }
+    // Deleting field storage.
+    FieldStorageConfig::loadByName($name 'field_addthis')->delete();
+  }
+
+  // Install and UnInstall the modules.
+  \Drupal::service('module_installer')->install(['addtoany']);
+  \Drupal::service('module_installer')->uninstall(['addthis']);
+}
