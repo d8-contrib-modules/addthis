@@ -28,7 +28,7 @@ function addthis_update_1001 (){
       FieldConfig::loadByName($name, $bundle, 'field_addthis')->delete();
     }
     // Deleting field storage.
-    FieldStorageConfig::loadByName($name 'field_addthis')->delete();
+    FieldStorageConfig::loadByName($name, 'field_addthis')->delete();
   }
 
   // Install and UnInstall the modules.
